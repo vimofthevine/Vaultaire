@@ -41,8 +41,31 @@ namespace vaultaire
 		connect(mainMenu, SIGNAL(quit()), this, SLOT(close()));
 		connect(mainMenu, SIGNAL(editSettings()), settingsDialog, SLOT(show()));
 
+		setWindowTitle(tr("Vaultaire"));
 		QLabel* label = new QLabel("Vaultaire");
 		setCentralWidget(label);
+
+		readSettings();
+	}
+
+	/** Read settings */
+	void MainWindow::readSettings()
+	{
+		QSettings settings(qApp->organizationName(),
+			qApp->applicationName());
+		QSize size = settings.value("MainWindowSize", QSize(600, 500)).toSize();
+		QByteArray state = settings.value("MainWindowState", QByteArray()).toByteArray();
+		restoreState(state);
+		resize(size);
+	}
+
+	/** Write settings */
+	void MainWindow::writeSettings()
+	{
+		QSettings settings(qApp->organizationName(),
+			qApp->applicationName());
+		settings.setValue("MainWindowSize", size());
+		settings.setValue("MainWindowState", saveState());
 	}
 
 	/** Close event */
@@ -52,9 +75,14 @@ namespace vaultaire
 			tr("Close Vaultaire?"), QMessageBox::Yes | QMessageBox::Cancel);
 
 		if (result == QMessageBox::Yes)
+		{
+			writeSettings();
 			event->accept();
+		}
 		else
+		{
 			event->ignore();
+		}
 	}
 
 	/** About */

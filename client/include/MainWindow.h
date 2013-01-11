@@ -46,6 +46,8 @@ namespace vaultaire
 		private:
 			MainMenu* mainMenu;
 			SettingsDialog* settingsDialog;
+			void writeSettings();
+			void readSettings();
 	};
 }
 
