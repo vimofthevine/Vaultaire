@@ -23,7 +23,7 @@ namespace vaultaire
 	// Library root
 	static const QString& LIB_ROOT_KEY = "LibraryRootDirectory";
 	static const QString& DEFAULT_LIB_ROOT = "~/Documents/Library";
-	static const QString& LIB_ROOT_HELP = "    Root directory in which all library documents are found";
+	static const QString& LIB_ROOT_HELP = "Root directory in which all library documents are found";
 
 	/** Constructor */
 	LibrarySettings::LibrarySettings(QWidget* parent)
@@ -38,6 +38,7 @@ namespace vaultaire
 		QString currentLibRoot = settings->value(LIB_ROOT_KEY,
 			DEFAULT_LIB_ROOT).toString();
 		libRoot = new QLineEdit(currentLibRoot, this);
+		libRoot->setToolTip(LIB_ROOT_HELP);
 		connect(libRoot, SIGNAL(textEdited(QString)),
 			this, SLOT(libRootChanged(QString)));
 
@@ -45,7 +46,6 @@ namespace vaultaire
 		QFormLayout* form = new QFormLayout;
 		setLayout(form);
 		form->addRow(tr("Library Root"), libRoot);
-		form->addRow(new QLabel(LIB_ROOT_HELP));
 
 		// Disable fields if not writable (i.e., no permission
 		// to modify system-level settings

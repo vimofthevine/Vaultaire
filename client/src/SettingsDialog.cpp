@@ -47,6 +47,7 @@ namespace vaultaire
 		setLayout(mainLayout);
 
 		setWindowTitle(tr("Settings"));
+		resize(500, 400);
 	}
 
 	/** Add settings page */

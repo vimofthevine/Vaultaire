@@ -19,6 +19,7 @@
 #include "LibrarySettings.h"
 #include "MainMenu.h"
 #include "MainWindow.h"
+#include "ScannerSettings.h"
 #include "SettingsDialog.h"
 
 namespace vaultaire
@@ -30,6 +31,9 @@ namespace vaultaire
 
 		LibrarySettings* libSettings = new LibrarySettings;
 		settingsDialog->add(tr("Library"), libSettings);
+
+		ScannerSettings* scannerSettings = new ScannerSettings;
+		settingsDialog->add(tr("Scanner"), scannerSettings);
 
 		mainMenu = new MainMenu(this);
 		setMenuBar(mainMenu);

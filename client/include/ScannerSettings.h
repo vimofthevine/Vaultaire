@@ -14,41 +14,48 @@
  * limitations under the License.
  */
 
-#ifndef LIBRARYSETTINGS_H
-#define LIBRARYSETTINGS_H
+#ifndef SCANNERSETTINGS_H
+#define SCANNERSETTINGS_H
 
 #include <QWidget>
 
 class QLineEdit;
+class QPushButton;
 class QSettings;
 
 namespace vaultaire
 {
 	/**
-	 * Library settings panel.
+	 * Scanner settings panel.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
-	class LibrarySettings : public QWidget
+	class ScannerSettings : public QWidget
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a new library settings panel.
+			 * Constructs a new scanner settings panel.
 			 *
 			 * @param parent parent widget
 			 */
-			LibrarySettings(QWidget* parent = 0);
+			ScannerSettings(QWidget* parent = 0);
 
 		private slots:
-			void libRootChanged(const QString& newLibRoot);
+			void deviceNameChanged(const QString& newDevice);
+			void scanCommandChanged(const QString& newCommand);
+			void showVerboseCommandHelp();
 
 		private:
 			/** System-wide settings */
 			QSettings* settings;
-			/** Library root directory field */
-			QLineEdit* libRoot;
+			/** Scanner device */
+			QLineEdit* scannerDevice;
+			/** Scan command */
+			QLineEdit* scanCommand;
+			/** Scan command help */
+			QPushButton* scanHelp;
 	};
 }
 
