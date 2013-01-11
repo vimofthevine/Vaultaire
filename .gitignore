@@ -1,4 +1,5 @@
 # Build output
+build/
 bin/
 lib/
 obj/
