@@ -58,6 +58,8 @@ namespace vaultaire
 				{
 					imageLabel->adjustSize();
 				}
+
+				scrollArea->setEnabled(true);
 			}
 			else
 			{
@@ -73,7 +75,10 @@ namespace vaultaire
 	/** Clear */
 	void ImageViewer::clear()
 	{
-		// TODO
+		QPixmap cleared;
+		imageLabel->setPixmap(cleared);
+		fitToWindow();
+		scrollArea->setEnabled(false);
 	}
 
 	/** Zoom in */
