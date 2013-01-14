@@ -12,12 +12,14 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
+           src/ImageViewer.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
            src/SettingsDialog.cpp
 
 HEADERS  += include/MainWindow.h \
             include/MainMenu.h \
+            include/ImageViewer.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
             include/SettingsDialog.h
