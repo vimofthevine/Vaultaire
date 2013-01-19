@@ -164,7 +164,8 @@ namespace vaultaire
 		fitToWindowAction = new QAction(tr("&Fit to Window"), this);
 		fitToWindowAction->setEnabled(false);
 		fitToWindowAction->setCheckable(true);
-		fitToWindowAction->setShortcut(tr("Ctrl+F"));
+		fitToWindowAction->setShortcut(tr("/"));
+		fitToWindowAction->setChecked(true);
 		connect(fitToWindowAction, SIGNAL(triggered()),
 			this, SLOT(fitToWindow()));
 	}
