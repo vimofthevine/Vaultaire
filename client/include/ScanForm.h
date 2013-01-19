@@ -19,6 +19,8 @@
 
 #include <QSplitter>
 
+#include "Scanner.h"
+
 // Forward declarations
 class QDateEdit;
 class QFileSystemWatcher;
@@ -44,17 +46,21 @@ namespace vaultaire
 			ScanForm(QWidget* parent = 0);
 
 		private slots:
-			void reset();
 			void updateButtons();
+			void reset();
 			void scan();
 			void save();
 			void redo();
+			void cancel();
 			void updateCollectionAutoCompletion();
+			void scanStarted();
+			void scanFinished(Scanner::ScanResult result);
 
 		private:
 			void createButtons();
 			void createFields();
 			void createFSWatcher();
+			void enable(bool enabled);
 
 			QSettings* settings;
 			QFileSystemWatcher* watcher;
@@ -66,11 +72,16 @@ namespace vaultaire
 			QDateEdit* date;
 
 			QPushButton* scanPreviewButton;
+			QPushButton* cancelButton;
 			QPushButton* acceptScanButton;
 			QPushButton* rejectScanButton;
 			QPushButton* resetButton;
 
 			ImageViewer* imageViewer;
+			Scanner* scanner;
+
+			// Current file name
+			QString filename;
 	};
 }
 

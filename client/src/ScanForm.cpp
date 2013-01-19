@@ -29,6 +29,11 @@ namespace vaultaire
 			qApp->applicationName(),
 			this);
 
+		scanner = new Scanner(settings, this);
+		connect(scanner, SIGNAL(started()), this, SLOT(scanStarted()));
+		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
+			this, SLOT(scanFinished(Scanner::ScanResult)));
+
 		createButtons();
 		createFields();
 		updateCollectionAutoCompletion();
@@ -43,6 +48,7 @@ namespace vaultaire
 
 		QHBoxLayout* buttonsLayout = new QHBoxLayout;
 		buttonsLayout->addWidget(scanPreviewButton);
+		buttonsLayout->addWidget(cancelButton);
 		buttonsLayout->addWidget(acceptScanButton);
 		buttonsLayout->addWidget(rejectScanButton);
 		buttonsLayout->addWidget(resetButton);
@@ -55,27 +61,51 @@ namespace vaultaire
 		leftWidget->setLayout(leftLayout);
 
 		imageViewer = new ImageViewer(this);
+		imageViewer->clear();
 
 		addWidget(leftWidget);
 		addWidget(imageViewer);
 		setStretchFactor(1, 2);
 	}
 
+	/* Scan button hit */
 	void ScanForm::scan()
 	{
-		qDebug() << "scan";
+		QString userTitle = title->text();
+		qDebug() << "User title: " << userTitle;
+
+		// Sanitize title for file name
+		QRegExp regex("[\\ <>,.\\/?:;'\"\\[\\{\\]\\}\\|\\\\`~!@#$%^&*\\(\\)+=]");
+		QString sanitized = userTitle;
+		int pos = 0;
+		while ((pos = regex.indexIn(sanitized)) != -1)
+		{
+			sanitized = sanitized.replace(pos, regex.matchedLength(), "_");
+		}
+		qDebug() << "Sanitized: " << sanitized;
+
+		filename = "/tmp/" + sanitized;
+		qDebug() << "Filename: " << filename;
+		scanner->scan(filename);
 	}
 
+	/* Save button hit */
 	void ScanForm::save()
 	{
 		qDebug() << "save";
 	}
 
+	/* Redo button hit */
 	void ScanForm::redo()
 	{
-		qDebug() << "redo";
+		qDebug() << "re-performing scan";
+		acceptScanButton->setEnabled(false);
+		rejectScanButton->setEnabled(false);
+		imageViewer->clear();
+		scan();
 	}
 
+	/* Reset button hit */
 	void ScanForm::reset()
 	{
 		date->setDate(QDate::currentDate());
@@ -84,6 +114,84 @@ namespace vaultaire
 		title->setText("");
 		tags->setText("");
 		updateButtons();
+	}
+
+	/* Cancel button hit */
+	void ScanForm::cancel()
+	{
+		if (scanner->isScanning())
+		{
+			qDebug() << "User cancelled scan";
+			scanner->cancel();
+		}
+		else
+		{
+			qDebug() << "User cancelled post-scan";
+			imageViewer->clear();
+			cancelButton->setEnabled(false);
+			acceptScanButton->setEnabled(false);
+			rejectScanButton->setEnabled(false);
+			enable(true);
+			updateButtons();
+		}
+	}
+
+	/* Scan started */
+	void ScanForm::scanStarted()
+	{
+		qDebug() << "scanning started...";
+		enable(false);
+		cancelButton->setEnabled(true);
+	}
+
+	/* Scan finished */
+	void ScanForm::scanFinished(Scanner::ScanResult result)
+	{
+		qDebug() << "Scanning finished " << result;
+
+		if (result == Scanner::ScanCancelled)
+		{
+			QMessageBox::information(this, "Scan Cancelled",
+				"Scan has been cancelled");
+			cancelButton->setEnabled(false);
+			enable(true);
+			updateButtons();
+		}
+		else if (result == Scanner::ScanComplete)
+		{
+			cancelButton->setEnabled(true);
+			acceptScanButton->setEnabled(true);
+			rejectScanButton->setEnabled(true);
+			imageViewer->open(filename);
+		}
+		else
+		{
+			QMessageBox::warning(this, "Scan Error",
+				"An error occured scanning the document");
+			cancelButton->setEnabled(false);
+			enable(true);
+			updateButtons();
+		}
+	}
+
+	/** Enable form */
+	void ScanForm::enable(bool enabled)
+	{
+		date->setEnabled(enabled);
+		collection->setEnabled(enabled);
+		category->setEnabled(enabled);
+		title->setEnabled(enabled);
+		tags->setEnabled(enabled);
+
+		if (enabled)
+		{
+			updateButtons();
+		}
+		else
+		{
+			scanPreviewButton->setEnabled(false);
+			resetButton->setEnabled(false);
+		}
 	}
 
 	void ScanForm::updateButtons()
@@ -109,6 +217,11 @@ namespace vaultaire
 		scanPreviewButton->setEnabled(false);
 		connect(scanPreviewButton, SIGNAL(clicked()),
 			this, SLOT(scan()));
+
+		cancelButton = new QPushButton(tr("&Cancel"), this);
+		cancelButton->setEnabled(false);
+		connect(cancelButton, SIGNAL(clicked()),
+			this, SLOT(cancel()));
 
 		acceptScanButton = new QPushButton(tr("Sa&ve"), this);
 		acceptScanButton->setEnabled(false);

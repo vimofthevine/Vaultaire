@@ -1,0 +1,108 @@
+/*
+ * Copyright 2012 Kyle Treubig
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include <QtCore>
+
+#include "Scanner.h"
+#include "SettingKeys.h"
+
+namespace vaultaire
+{
+	/** Constructor */
+	Scanner::Scanner(QSettings* settings, QObject* parent) :
+		QObject(parent), settings(settings)
+	{
+		process = new QProcess(this);
+		connect(process, SIGNAL(error(QProcess::ProcessError)),
+			this, SLOT(error(QProcess::ProcessError)));
+		connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
+			this, SLOT(finished(int, QProcess::ExitStatus)));
+		connect(process, SIGNAL(started()), this, SIGNAL(started()));
+	}
+
+	/** Scan */
+	void Scanner::scan(const QString& filename)
+	{
+		// Only one scan at a time
+		if ( ! isScanning())
+		{
+			// Re-read settings
+			QString command = settings->value(SCAN_COMMAND_KEY,
+				DEFAULT_SCAN_COMMAND).toString();
+			qDebug() << "Scan command: " << command;
+
+			QString device = settings->value(SCANNER_DEVICE_KEY,
+				DEFAULT_SCANNER_DEVICE).toString();
+			qDebug() << "Scanner: " << device;
+
+			QString cmd = command.replace("%device%", device);
+			qDebug() << "Command: " << cmd;
+
+			process->setStandardOutputFile(filename);
+			process->start(cmd);
+		}
+	}
+
+	/** Is-scanning */
+	bool Scanner::isScanning() const
+	{
+		return (process->state() != QProcess::NotRunning);
+	}
+
+	/** Cancel */
+	void Scanner::cancel()
+	{
+		if (isScanning())
+		{
+			qDebug() << "Terminating scan process";
+			process->terminate();
+		}
+	}
+
+	/** Finished slot */
+	void Scanner::finished(int exitCode, QProcess::ExitStatus exitStatus)
+	{
+		if (exitStatus == QProcess::NormalExit)
+		{
+			qDebug() << "Scan process normal exit";
+
+			QString err(process->readAllStandardError());
+			qDebug() << err;
+			emit finished(err.contains("cancel")
+				? ScanCancelled : ScanComplete);
+		}
+		else
+		{
+			qDebug() << "Scan process crash exit";
+		}
+	}
+
+	/** Error slot */
+	void Scanner::error(QProcess::ProcessError error)
+	{
+		qDebug() << "Scan process error: " << error;
+		switch(error)
+		{
+			case QProcess::FailedToStart:
+				emit finished(ScanNotStarted);
+				break;
+			default:
+				emit finished(ScanFailed);
+		}
+	}
+
+}
+
