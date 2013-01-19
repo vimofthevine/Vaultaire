@@ -111,6 +111,13 @@ namespace vaultaire
 		cancelButton->setEnabled(false);
 		acceptScanButton->setEnabled(false);
 		rejectScanButton->setEnabled(false);
+
+		// Clean up the temporary file
+		QFile file(filename);
+		if (file.exists())
+		{
+			file.remove();
+		}
 	}
 
 	/* Redo button hit */
@@ -151,6 +158,12 @@ namespace vaultaire
 			rejectScanButton->setEnabled(false);
 			enable(true);
 			updateButtons();
+		}
+
+		QFile file(filename);
+		if (file.exists())
+		{
+			file.remove();
 		}
 	}
 
