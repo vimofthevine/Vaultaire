@@ -17,17 +17,14 @@
 #include <QtGui>
 
 #include "ScannerSettings.h"
+#include "SettingKeys.h"
 
 namespace vaultaire
 {
 	// Scanner device
-	static const QString DEVICE_KEY = "ScannerDevice";
-	static const QString DEFAULT_DEVICE = "";
 	static const QString DEVICE_HELP = "Unique identifier of the scanner device";
 
 	// Scan command
-	static const QString COMMAND_KEY = "ScanCommand";
-	static const QString DEFAULT_COMMAND = "scanimage -d \%device\% --format=tiff > \%file\%";
 	static const QString COMMAND_HELP = "Command to be executed to perform a scan";
 	static const QString COMMAND_VERBOSE_HELP = "Command to be executed to perform a scan operation.\n"
 		"\n"
@@ -43,16 +40,16 @@ namespace vaultaire
 			qApp->organizationName(), qApp->applicationName(), this);
 
 		// Scanner device field
-		QString currentDevice = settings->value(DEVICE_KEY,
-			DEFAULT_DEVICE).toString();
+		QString currentDevice = settings->value(SCANNER_DEVICE_KEY,
+			DEFAULT_SCANNER_DEVICE).toString();
 		scannerDevice = new QLineEdit(currentDevice, this);
 		scannerDevice->setToolTip(DEVICE_HELP);
 		connect(scannerDevice, SIGNAL(textEdited(QString)),
 			this, SLOT(deviceNameChanged(QString)));
 
 		// Scan command field
-		QString currentCommand = settings->value(COMMAND_KEY,
-			DEFAULT_COMMAND).toString();
+		QString currentCommand = settings->value(SCAN_COMMAND_KEY,
+			DEFAULT_SCAN_COMMAND).toString();
 		scanCommand = new QLineEdit(currentCommand, this);
 		scanCommand->setToolTip(COMMAND_HELP);
 		connect(scanCommand, SIGNAL(textEdited(QString)),
@@ -83,13 +80,13 @@ namespace vaultaire
 	/** Store change to scanner device */
 	void ScannerSettings::deviceNameChanged(const QString& newDevice)
 	{
-		settings->setValue(DEVICE_KEY, newDevice);
+		settings->setValue(SCANNER_DEVICE_KEY, newDevice);
 	}
 
 	/** Store change to scan command */
 	void ScannerSettings::scanCommandChanged(const QString& newCommand)
 	{
-		settings->setValue(COMMAND_KEY, newCommand);
+		settings->setValue(SCAN_COMMAND_KEY, newCommand);
 	}
 
 	/** Show command help */

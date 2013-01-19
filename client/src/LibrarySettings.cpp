@@ -17,12 +17,10 @@
 #include <QtGui>
 
 #include "LibrarySettings.h"
+#include "SettingKeys.h"
 
 namespace vaultaire
 {
-	// Library root
-	static const QString& LIB_ROOT_KEY = "LibraryRootDirectory";
-	static const QString& DEFAULT_LIB_ROOT = "~/Documents/Library";
 	static const QString& LIB_ROOT_HELP = "Root directory in which all library documents are found";
 
 	/** Constructor */

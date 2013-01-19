@@ -18,11 +18,10 @@
 
 #include "ImageViewer.h"
 #include "ScanForm.h"
+#include "SettingKeys.h"
 
 namespace vaultaire
 {
-	static const QString LIB_ROOT_KEY = "LibraryRootDirectory";
-
 	ScanForm::ScanForm(QWidget* parent) : QSplitter(parent)
 	{
 		settings = new QSettings(QSettings::SystemScope,
