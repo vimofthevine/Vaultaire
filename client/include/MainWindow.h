@@ -19,6 +19,9 @@
 
 #include <QMainWindow>
 
+// Forward declarations
+class QStackedWidget;
+
 namespace vaultaire
 {
 	// Forward declarations
@@ -45,6 +48,7 @@ namespace vaultaire
 
 		private:
 			MainMenu* mainMenu;
+			QStackedWidget* stack;
 			SettingsDialog* settingsDialog;
 			void writeSettings();
 			void readSettings();

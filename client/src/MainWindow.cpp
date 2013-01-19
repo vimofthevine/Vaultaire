@@ -19,6 +19,7 @@
 #include "LibrarySettings.h"
 #include "MainMenu.h"
 #include "MainWindow.h"
+#include "ScanForm.h"
 #include "ScannerSettings.h"
 #include "SettingsDialog.h"
 
@@ -35,6 +36,11 @@ namespace vaultaire
 		ScannerSettings* scannerSettings = new ScannerSettings;
 		settingsDialog->add(tr("Scanner"), scannerSettings);
 
+		ScanForm* scanForm = new ScanForm(this);
+
+		QStackedWidget* stack = new QStackedWidget(this);
+		stack->addWidget(scanForm);
+
 		mainMenu = new MainMenu(this);
 		setMenuBar(mainMenu);
 		connect(mainMenu, SIGNAL(showAboutInfo()), this, SLOT(about()));
@@ -42,8 +48,7 @@ namespace vaultaire
 		connect(mainMenu, SIGNAL(editSettings()), settingsDialog, SLOT(show()));
 
 		setWindowTitle(tr("Vaultaire"));
-		QLabel* label = new QLabel("Vaultaire");
-		setCentralWidget(label);
+		setCentralWidget(stack);
 
 		readSettings();
 	}

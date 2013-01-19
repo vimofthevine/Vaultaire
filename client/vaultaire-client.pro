@@ -12,6 +12,7 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
+           src/ScanForm.cpp \
            src/ImageViewer.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
@@ -19,6 +20,7 @@ SOURCES += src/main.cpp \
 
 HEADERS  += include/MainWindow.h \
             include/MainMenu.h \
+            include/ScanForm.h \
             include/ImageViewer.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
