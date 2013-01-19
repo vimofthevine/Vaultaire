@@ -15,6 +15,7 @@ SOURCES += src/main.cpp \
            src/ScanForm.cpp \
            src/ImageViewer.cpp \
            src/Scanner.cpp \
+           src/Library.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
            src/SettingsDialog.cpp
@@ -24,6 +25,7 @@ HEADERS  += include/MainWindow.h \
             include/ScanForm.h \
             include/ImageViewer.h \
             include/Scanner.h \
+            include/Library.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
             include/SettingsDialog.h

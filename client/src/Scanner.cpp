@@ -80,9 +80,21 @@ namespace vaultaire
 			qDebug() << "Scan process normal exit";
 
 			QString err(process->readAllStandardError());
-			qDebug() << err;
-			emit finished(err.contains("cancel")
-				? ScanCancelled : ScanComplete);
+			err = err.toLower();
+			qDebug() << "stderr: " << err;
+
+			if (err.contains("cancel"))
+			{
+				emit finished(ScanCancelled);
+			}
+			else if (err.contains("error") || err.contains("fail"))
+			{
+				emit finished(ScanFailed);
+			}
+			else
+			{
+				emit finished(ScanComplete);
+			}
 		}
 		else
 		{

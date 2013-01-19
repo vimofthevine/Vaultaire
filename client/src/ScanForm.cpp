@@ -17,6 +17,7 @@
 #include <QtGui>
 
 #include "ImageViewer.h"
+#include "Library.h"
 #include "ScanForm.h"
 #include "SettingKeys.h"
 
@@ -73,18 +74,7 @@ namespace vaultaire
 	{
 		QString userTitle = title->text();
 		qDebug() << "User title: " << userTitle;
-
-		// Sanitize title for file name
-		QRegExp regex("[\\ <>,.\\/?:;'\"\\[\\{\\]\\}\\|\\\\`~!@#$%^&*\\(\\)+=]");
-		QString sanitized = userTitle;
-		int pos = 0;
-		while ((pos = regex.indexIn(sanitized)) != -1)
-		{
-			sanitized = sanitized.replace(pos, regex.matchedLength(), "_");
-		}
-		qDebug() << "Sanitized: " << sanitized;
-
-		filename = "/tmp/" + sanitized;
+		filename = "/tmp/" + Library::sanitize(userTitle);
 		qDebug() << "Filename: " << filename;
 		scanner->scan(filename);
 	}
@@ -92,7 +82,35 @@ namespace vaultaire
 	/* Save button hit */
 	void ScanForm::save()
 	{
-		qDebug() << "save";
+		QDate docDate = date->date();
+		QString docColl = collection->text();
+		QString docCat = category->text();
+		QString docTitle = title->text();
+		QString docTags = tags->text();
+
+		qDebug() << "Saving " << filename
+			<< " with date=" << docDate
+			<< ", collection=" << docColl
+			<< ", category=" << docCat
+			<< ", title=" << docTitle
+			<< ", & tags=" << docTags;
+
+		if ( ! Library::add(filename, docDate,
+			docColl, docCat, docTitle, docTags))
+		{
+			QMessageBox::warning(this, "Save File Error",
+				"An error occured adding the document to the library");
+		}
+		else
+		{
+			reset();
+			imageViewer->clear();
+		}
+
+		enable(true);
+		cancelButton->setEnabled(false);
+		acceptScanButton->setEnabled(false);
+		rejectScanButton->setEnabled(false);
 	}
 
 	/* Redo button hit */

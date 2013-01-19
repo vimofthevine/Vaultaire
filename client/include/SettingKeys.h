@@ -29,6 +29,16 @@ namespace vaultaire
 	// Scan command
 	static const QString SCAN_COMMAND_KEY = "ScanCommand";
 	static const QString DEFAULT_SCAN_COMMAND = "scanimage -d \%device\% --format=tiff > \%file\%";
+
+	// Image conversion
+	static const QString DO_CONVERT_KEY = "PerformImageConversion";
+	static const QString CONVERT_CMD_KEY = "ImageConversionCommand";
+	static const QString DEFAULT_CONVERT_CMD = "convert \%in\% \%out\%";
+
+	// OCR
+	static const QString DO_OCR_KEY = "PerformOCR";
+	static const QString OCR_CMD_KEY = "OCRCommand";
+	static const QString DEFAULT_OCR_CMD = "gocr -i \%in\% -o \%out\%";
 }
 
 #endif
