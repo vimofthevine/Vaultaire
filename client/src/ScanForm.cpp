@@ -35,6 +35,8 @@ namespace vaultaire
 		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
 			this, SLOT(scanFinished(Scanner::ScanResult)));
 
+		library = new Library(this);
+
 		createButtons();
 		createFields();
 		updateCollectionAutoCompletion();
@@ -95,7 +97,7 @@ namespace vaultaire
 			<< ", title=" << docTitle
 			<< ", & tags=" << docTags;
 
-		if ( ! Library::add(filename, docDate,
+		if ( ! library->add(filename, docDate,
 			docColl, docCat, docTitle, docTags))
 		{
 			QMessageBox::warning(this, "Save File Error",

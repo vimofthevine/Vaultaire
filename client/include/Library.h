@@ -17,15 +17,25 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include <QtCore>
+
 // Forward declaration
-class QDate;
-class QString;
+class QSettings;
 
 namespace vaultaire
 {
-	class Library
+	class Library : QObject
 	{
+		Q_OBJECT
+
 		public:
+			/**
+			 * Constructs a new document library model.
+			 *
+			 * @param parent parent object
+			 */
+			Library(QObject* parent = 0);
+
 			/**
 			 * Adds the specified file to the document library
 			 * with the given parameters.
@@ -39,7 +49,7 @@ namespace vaultaire
 			 * @return true if the document was successfully added
 			 *         to the document library
 			 */
-			static bool add(const QString& tmpfile, const QDate& date,
+			bool add(const QString& tmpfile, const QDate& date,
 				const QString& collection, const QString& category,
 				const QString& title, const QString& tags);
 
@@ -51,6 +61,16 @@ namespace vaultaire
 			 * @return sanitized file name
 			 */
 			static QString sanitize(const QString& orig);
+
+		private:
+			bool copyOrConvert(const QString& src, const QString& dest);
+			bool extractOcr(const QString& src, const QString& dest);
+			bool createMetaFile(const QString& filename, const QDate& date,
+				const QString& category, const QString& title, const QString& tags);
+			bool exec(const QString& command);
+
+			QSettings* settings;
+			QProcess* process;
 	};
 }
 

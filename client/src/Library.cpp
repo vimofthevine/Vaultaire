@@ -22,7 +22,7 @@
 
 namespace vaultaire
 {
-	/** Sanitize */
+	/** Static sanitize */
 	QString Library::sanitize(const QString& orig)
 	{
 		QRegExp regex("[\\ <>,.\\/?:;'\"\\[\\{\\]\\}\\|\\\\`~!@#$%^&*\\(\\)+=]");
@@ -36,76 +36,147 @@ namespace vaultaire
 		return sanitized;
 	}
 
+	/** Constructor */
+	Library::Library(QObject* parent) : QObject(parent)
+	{
+		settings = new QSettings(QSettings::SystemScope,
+			qApp->organizationName(), qApp->applicationName(), this);
+
+		process = new QProcess(this);
+	}
+
 	/** Add document */
-	bool Library::add(const QString& tmpfile,
+	bool Library::add(const QString& tmpFile,
 		const QDate& date, const QString& collection,
 		const QString& category, const QString& title,
 		const QString& tags)
 	{
-		QSettings settings(QSettings::SystemScope,
-			QApplication::organizationName(),
-			QApplication::applicationName());
-
-		QString libRoot = settings.value(LIB_ROOT_KEY,
+		QString libRoot = settings->value(LIB_ROOT_KEY,
 			DEFAULT_LIB_ROOT).toString();
 		qDebug() << "Libroot=" << libRoot;
 
-		// Construct destination path
+		// Construct destination path and filenames
 		QString pattern("%1/%2/%3/%4/%5");
 		QString path = pattern.arg(libRoot)
 			.arg(collection)
 			.arg(date.year())
 			.arg(date.month(), 2, 10, QChar('0'))
 			.arg(date.day(), 2, 10, QChar('0'));
-		qDebug() << "Filepath: " << path;
 		QString sanitizedTitle = sanitize(title);
-		QString filename = (path + "/%1")
-			.arg(sanitizedTitle);
-		qDebug() << "Filename: " << filename;
+		QString imgFile = (path + "/%1").arg(sanitizedTitle);
+		QString ocrFile = (path + "/.%1.ocr").arg(sanitizedTitle);
+		QString metaFile = (path + "/.%1.meta").arg(sanitizedTitle);
+
+		qDebug() << "Image file: " << imgFile;
+		qDebug() << "OCR file: " << ocrFile;
+		qDebug() << "Meta file: " << metaFile;
 
 		// Create directory
 		QDir libRootDir(libRoot);
 		if ( ! libRootDir.exists() || ! libRootDir.mkpath(path))
 			return false;
 
-		QFile srcFile(tmpfile);
+		// Copy/convert image file
+		if ( ! copyOrConvert(tmpFile, imgFile))
+			return false;
+
+		// Extract OCR from image file
+		if ( ! extractOcr(tmpFile, ocrFile))
+			return false;
+
+		// Store meta data
+		return createMetaFile(metaFile, date, category, title, tags);
+	}
+
+	/** Copy or convert image file into destination location */
+	bool Library::copyOrConvert(const QString& src, const QString& dest)
+	{
+		QFile srcFile(src);
 		if ( ! srcFile.exists())
 			return false;
 
 		// Copy/convert to destination file
-		if (settings.value(DO_CONVERT_KEY, false).toBool())
+		if (settings->value(DO_CONVERT_KEY, false).toBool())
 		{
-			qDebug() << "perform convert";
+			QString command = settings->value(CONVERT_CMD_KEY,
+				DEFAULT_CONVERT_CMD).toString();
+			qDebug() << "Convert command: " << command;
+
+			QString ext = settings->value(CONVERTED_SUFFIX_KEY,
+				DEFAULT_CONVERTED_SUFFIX).toString();
+
+			QString cmd = command.replace("%in%", src)
+				.replace("%out%", dest + ext);
+			qDebug() << "Command: " << cmd;
+
+			return exec(cmd);
 		}
 		else
 		{
-			if ( ! srcFile.copy(filename))
-				return false;
-		}
+			QString ext = settings->value(SCANNED_SUFFIX_KEY,
+				DEFAULT_SCANNED_SUFFIX).toString();
+			QString destname = dest + ext;
 
-		if (settings.value(DO_OCR_KEY, false).toBool())
+			qDebug() << "Copying to " << destname;
+			return srcFile.copy(destname);
+		}
+	}
+
+	/** Perform OCR */
+	bool Library::extractOcr(const QString& src, const QString& dest)
+	{
+		if (settings->value(DO_OCR_KEY, false).toBool())
 		{
-			QString ocrFile = (path + "/.%1.ocr")
-				.arg(sanitizedTitle);
-			qDebug() << "perform OCR " << ocrFile;
-		}
+			QString command = settings->value(OCR_CMD_KEY,
+				DEFAULT_OCR_CMD).toString();
+			qDebug() << "OCR command: " << command;
 
-		QString metaFilePath = (path + "/.%1.meta")
-			.arg(sanitizedTitle);
+			QString cmd = command.replace("%in%", src).replace("%out%", dest);
+			qDebug() << "Command: " << cmd;
+
+			return exec(cmd);
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	/** Create meta file */
+	bool Library::createMetaFile(const QString& filename, const QDate& date,
+		const QString& category, const QString& title, const QString& tags)
+	{
 		QString metaData = QString("Date: %1\nCategory: %2\nTitle: %3\nTags: %4")
 			.arg(date.toString())
 			.arg(category)
 			.arg(title)
 			.arg(tags);
-		qDebug() << "meta file: " << metaFilePath;
+		qDebug() << "meta file: " << filename;
 		qDebug() << "meta data: " << metaData;
 
-		QFile metaFile(metaFilePath);
+		QFile metaFile(filename);
 		metaFile.open(QIODevice::WriteOnly | QIODevice::Text);
 		qint64 bytesWritten = metaFile.write(metaData.toUtf8());
 		metaFile.close();
 
 		return (bytesWritten > 0);
+	}
+
+	/** Execute command */
+	bool Library::exec(const QString& command)
+	{
+		if (process->state() == QProcess::NotRunning)
+		{
+			qDebug() << "Executing " << command;
+			process->start(command);
+			process->waitForFinished();
+			return (process->exitStatus() == QProcess::NormalExit);
+		}
+		else
+		{
+			qDebug() << "Process already in progress";
+			return false;
+		}
 	}
 }
 

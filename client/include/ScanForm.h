@@ -32,6 +32,7 @@ namespace vaultaire
 {
 	// Forward declarations
 	class ImageViewer;
+	class Library;
 
 	class ScanForm : public QSplitter
 	{
@@ -79,6 +80,7 @@ namespace vaultaire
 
 			ImageViewer* imageViewer;
 			Scanner* scanner;
+			Library* library;
 
 			// Current file name
 			QString filename;
