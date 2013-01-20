@@ -25,7 +25,9 @@ class QStackedWidget;
 namespace vaultaire
 {
 	// Forward declarations
+	class LibraryBrowser;
 	class MainMenu;
+	class ScanForm;
 	class SettingsDialog;
 
 	/**
@@ -44,14 +46,19 @@ namespace vaultaire
 			void closeEvent(QCloseEvent* event);
 
 		private slots:
+			void showScanForm();
+			void showFileBrowser();
 			void about();
 
 		private:
-			MainMenu* mainMenu;
-			QStackedWidget* stack;
-			SettingsDialog* settingsDialog;
 			void writeSettings();
 			void readSettings();
+
+			MainMenu* mainMenu;
+			SettingsDialog* settingsDialog;
+			QStackedWidget* stack;
+			ScanForm* scanForm;
+			LibraryBrowser* browser;
 	};
 }
 

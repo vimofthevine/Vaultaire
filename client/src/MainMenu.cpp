@@ -37,6 +37,13 @@ namespace vaultaire
 		scanFileAction->setStatusTip("Scan a new file into the library");
 		connect(scanFileAction, SIGNAL(triggered()), this, SIGNAL(scanNewFile()));
 
+		// Browse files
+		browseFilesAction = new QAction(tr("&Browse"), this);
+		browseFilesAction->setIcon(QIcon(":/icons/browse.png"));
+		browseFilesAction->setShortcut(QKeySequence::Open);
+		browseFilesAction->setStatusTip("Browse through files in the library");
+		connect(browseFilesAction, SIGNAL(triggered()), this, SIGNAL(browseFiles()));
+
 		// Find file
 		findFileAction = new QAction(tr("&Find"), this);
 		findFileAction->setIcon(QIcon(":/icons/find.png"));
@@ -68,6 +75,7 @@ namespace vaultaire
 	{
 		fileMenu = addMenu(tr("&File"));
 		fileMenu->addAction(scanFileAction);
+		fileMenu->addAction(browseFilesAction);
 		fileMenu->addAction(findFileAction);
 		fileMenu->addSeparator();
 		fileMenu->addAction(quitAction);

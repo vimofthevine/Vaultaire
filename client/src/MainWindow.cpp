@@ -16,6 +16,7 @@
 
 #include <QtGui>
 
+#include "LibraryBrowser.h"
 #include "LibrarySettings.h"
 #include "MainMenu.h"
 #include "MainWindow.h"
@@ -40,13 +41,17 @@ namespace vaultaire
 		OcrSettings* ocrSettings = new OcrSettings;
 		settingsDialog->add(tr("OCR"), ocrSettings);
 
-		ScanForm* scanForm = new ScanForm(this);
+		scanForm = new ScanForm(this);
+		browser = new LibraryBrowser(this);
 
-		QStackedWidget* stack = new QStackedWidget(this);
+		stack = new QStackedWidget(this);
 		stack->addWidget(scanForm);
+		stack->addWidget(browser);
 
 		mainMenu = new MainMenu(this);
 		setMenuBar(mainMenu);
+		connect(mainMenu, SIGNAL(scanNewFile()), this, SLOT(showScanForm()));
+		connect(mainMenu, SIGNAL(browseFiles()), this, SLOT(showFileBrowser()));
 		connect(mainMenu, SIGNAL(showAboutInfo()), this, SLOT(about()));
 		connect(mainMenu, SIGNAL(quit()), this, SLOT(close()));
 		connect(mainMenu, SIGNAL(editSettings()), settingsDialog, SLOT(show()));
@@ -92,6 +97,18 @@ namespace vaultaire
 		{
 			event->ignore();
 		}
+	}
+
+	/** Scan form */
+	void MainWindow::showScanForm()
+	{
+		stack->setCurrentWidget(scanForm);
+	}
+
+	/** File browser */
+	void MainWindow::showFileBrowser()
+	{
+		stack->setCurrentWidget(browser);
 	}
 
 	/** About */

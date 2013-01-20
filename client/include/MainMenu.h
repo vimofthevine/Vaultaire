@@ -36,6 +36,8 @@ namespace vaultaire
 		signals:
 			/** Scan new file */
 			void scanNewFile();
+			/** Browse files */
+			void browseFiles();
 			/** Find file */
 			void findFile();
 			/** Quit application */
@@ -56,6 +58,7 @@ namespace vaultaire
 			QMenu* helpMenu;
 
 			QAction* scanFileAction;
+			QAction* browseFilesAction;
 			QAction* findFileAction;
 			QAction* quitAction;
 			QAction* settingsAction;
