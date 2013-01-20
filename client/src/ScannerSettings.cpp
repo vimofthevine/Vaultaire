@@ -67,15 +67,12 @@ namespace vaultaire
 		connect(scannedSuffix, SIGNAL(textEdited(QString)),
 			this, SLOT(scanSuffixChanged(QString)));
 
-		bool currentDoConvert = settings->value(DO_CONVERT_KEY, false).toBool();
-
 		// Conversion command field
 		QString currentConvertCmd = settings->value(CONVERT_CMD_KEY,
 			DEFAULT_CONVERT_CMD).toString();
 		convertCommand = new QTextEdit(currentConvertCmd, this);
 		convertCommand->setToolTip(CONVERT_COMMAND_HELP);
 		convertCommand->setTabChangesFocus(true);
-		convertCommand->setEnabled(currentDoConvert);
 		convertCommand->setMaximumHeight(100);
 		connect(convertCommand, SIGNAL(textChanged()),
 			this, SLOT(convertCommandChanged()));
@@ -89,6 +86,7 @@ namespace vaultaire
 			this, SLOT(convertSuffixChanged(QString)));
 
 		// Do-conversion field
+		bool currentDoConvert = settings->value(DO_CONVERT_KEY, false).toBool();
 		doConversion = new QCheckBox(this);
 		doConversion->setChecked(currentDoConvert);
 		connect(doConversion, SIGNAL(clicked(bool)),
@@ -109,7 +107,7 @@ namespace vaultaire
 		form->addRow(tr("Converted File Extension"), convertedSuffix);
 
 		// Disable field if not writable (i.e., no permission
-		// to modify system-level settings
+		// to modify system-level settings)
 		scannerDevice->setEnabled(settings->isWritable());
 		scanCommand->setEnabled(settings->isWritable());
 		scannedSuffix->setEnabled(settings->isWritable());

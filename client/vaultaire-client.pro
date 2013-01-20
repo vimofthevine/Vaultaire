@@ -18,6 +18,7 @@ SOURCES += src/main.cpp \
            src/Library.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
+           src/OcrSettings.cpp \
            src/SettingsDialog.cpp
 
 HEADERS  += include/MainWindow.h \
@@ -28,6 +29,7 @@ HEADERS  += include/MainWindow.h \
             include/Library.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
+            include/OcrSettings.h \
             include/SettingsDialog.h
 
 INCLUDEPATH += ./include

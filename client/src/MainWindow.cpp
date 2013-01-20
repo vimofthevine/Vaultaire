@@ -19,6 +19,7 @@
 #include "LibrarySettings.h"
 #include "MainMenu.h"
 #include "MainWindow.h"
+#include "OcrSettings.h"
 #include "ScanForm.h"
 #include "ScannerSettings.h"
 #include "SettingsDialog.h"
@@ -35,6 +36,9 @@ namespace vaultaire
 
 		ScannerSettings* scannerSettings = new ScannerSettings;
 		settingsDialog->add(tr("Scanner"), scannerSettings);
+
+		OcrSettings* ocrSettings = new OcrSettings;
+		settingsDialog->add(tr("OCR"), ocrSettings);
 
 		ScanForm* scanForm = new ScanForm(this);
 
