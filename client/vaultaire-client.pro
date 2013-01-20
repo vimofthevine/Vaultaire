@@ -13,6 +13,7 @@ SOURCES += src/main.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
            src/ScanForm.cpp \
+           src/FileBrowser.cpp \
            src/ImageViewer.cpp \
            src/Scanner.cpp \
            src/Library.cpp \
@@ -24,6 +25,7 @@ SOURCES += src/main.cpp \
 HEADERS  += include/MainWindow.h \
             include/MainMenu.h \
             include/ScanForm.h \
+            include/FileBrowser.h \
             include/ImageViewer.h \
             include/Scanner.h \
             include/Library.h \
