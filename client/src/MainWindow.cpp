@@ -23,6 +23,7 @@
 #include "OcrSettings.h"
 #include "ScanForm.h"
 #include "ScannerSettings.h"
+#include "SearchForm.h"
 #include "SettingsDialog.h"
 
 namespace vaultaire
@@ -43,15 +44,18 @@ namespace vaultaire
 
 		scanForm = new ScanForm(this);
 		browser = new LibraryBrowser(this);
+		searchForm = new SearchForm(this);
 
 		stack = new QStackedWidget(this);
 		stack->addWidget(scanForm);
 		stack->addWidget(browser);
+		stack->addWidget(searchForm);
 
 		mainMenu = new MainMenu(this);
 		setMenuBar(mainMenu);
 		connect(mainMenu, SIGNAL(scanNewFile()), this, SLOT(showScanForm()));
 		connect(mainMenu, SIGNAL(browseFiles()), this, SLOT(showFileBrowser()));
+		connect(mainMenu, SIGNAL(findFile()), this, SLOT(showSearchForm()));
 		connect(mainMenu, SIGNAL(showAboutInfo()), this, SLOT(about()));
 		connect(mainMenu, SIGNAL(quit()), this, SLOT(close()));
 		connect(mainMenu, SIGNAL(editSettings()), settingsDialog, SLOT(show()));
@@ -109,6 +113,12 @@ namespace vaultaire
 	void MainWindow::showFileBrowser()
 	{
 		stack->setCurrentWidget(browser);
+	}
+
+	/** Search form */
+	void MainWindow::showSearchForm()
+	{
+		stack->setCurrentWidget(searchForm);
 	}
 
 	/** About */

@@ -28,6 +28,7 @@ namespace vaultaire
 	class LibraryBrowser;
 	class MainMenu;
 	class ScanForm;
+	class SearchForm;
 	class SettingsDialog;
 
 	/**
@@ -48,6 +49,7 @@ namespace vaultaire
 		private slots:
 			void showScanForm();
 			void showFileBrowser();
+			void showSearchForm();
 			void about();
 
 		private:
@@ -59,6 +61,7 @@ namespace vaultaire
 			QStackedWidget* stack;
 			ScanForm* scanForm;
 			LibraryBrowser* browser;
+			SearchForm* searchForm;
 	};
 }
 

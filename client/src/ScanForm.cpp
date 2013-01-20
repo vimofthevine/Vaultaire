@@ -275,7 +275,8 @@ namespace vaultaire
 	void ScanForm::updateCollectionAutoCompletion()
 	{
 		qDebug() << "updating auto-complete";
-		QString libRoot = settings->value(LIB_ROOT_KEY).toString();
+		QString libRoot = settings->value(LIB_ROOT_KEY,
+			DEFAULT_LIB_ROOT).toString();
 		qDebug() << libRoot;
 
 		QDir dir(libRoot);
@@ -310,7 +311,8 @@ namespace vaultaire
 
 	void ScanForm::createFSWatcher()
 	{
-		QString libRoot = settings->value(LIB_ROOT_KEY).toString();
+		QString libRoot = settings->value(LIB_ROOT_KEY,
+			DEFAULT_LIB_ROOT).toString();
 		watcher = new QFileSystemWatcher;
 		watcher->addPath(libRoot);
 		connect(watcher, SIGNAL(directoryChanged(QString)),
