@@ -19,9 +19,11 @@
 
 #include <QWidget>
 
+class QCheckBox;
 class QLineEdit;
 class QPushButton;
 class QSettings;
+class QTextEdit;
 
 namespace vaultaire
 {
@@ -44,8 +46,11 @@ namespace vaultaire
 
 		private slots:
 			void deviceNameChanged(const QString& newDevice);
-			void scanCommandChanged(const QString& newCommand);
-			void showVerboseCommandHelp();
+			void scanCommandChanged();
+			void scanSuffixChanged(const QString& newSuffix);
+			void doConversionChanged(bool doConvert);
+			void convertCommandChanged();
+			void convertSuffixChanged(const QString& newSuffix);
 
 		private:
 			/** System-wide settings */
@@ -53,9 +58,15 @@ namespace vaultaire
 			/** Scanner device */
 			QLineEdit* scannerDevice;
 			/** Scan command */
-			QLineEdit* scanCommand;
-			/** Scan command help */
-			QPushButton* scanHelp;
+			QTextEdit* scanCommand;
+			/** Scanned file suffix */
+			QLineEdit* scannedSuffix;
+			/** Perform-conversion */
+			QCheckBox* doConversion;
+			/** Conversion command */
+			QTextEdit* convertCommand;
+			/** Converted file suffix */
+			QLineEdit* convertedSuffix;
 	};
 }
 
