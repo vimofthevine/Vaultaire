@@ -30,6 +30,9 @@ class QSettings;
 
 namespace vaultaire
 {
+	// Forward declarations
+	class SearchEngine;
+
 	class SearchForm : public QWidget
 	{
 		Q_OBJECT
@@ -47,27 +50,32 @@ namespace vaultaire
 			void search();
 			void updateButtons();
 			void updateCollectionAutoCompletion();
+			void searchStarted();
+			void searchFailed();
+			void searchFinished(const QStringList& results);
 
 		private:
 			void createButtons();
 			void createFields();
 			void createFSWatcher();
+			void enableFields(bool enabled);
 
 			// Search parameters
-			QCheckBox* useDateRange;
-			QDateEdit* dateRangeStart;
-			QDateEdit* dateRangeEnd;
+			QComboBox* year;
+			QComboBox* month;
+			QComboBox* date;
 			QComboBox* collection;
-			QLineEdit* category;
-			QLineEdit* title;
-			QLineEdit* tags;
+			QComboBox* field;
+			QLineEdit* parameter;
 			QCheckBox* caseSensitivity;
 
 			QPushButton* searchButton;
 			QPushButton* resetButton;
+			QPushButton* cancelButton;
 
 			QSettings* settings;
 			QFileSystemWatcher* watcher;
+			SearchEngine* engine;
 	};
 }
 

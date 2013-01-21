@@ -19,6 +19,7 @@ SOURCES += src/main.cpp \
            src/ImageViewer.cpp \
            src/Scanner.cpp \
            src/Library.cpp \
+           src/SearchEngine.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
            src/OcrSettings.cpp \
@@ -33,6 +34,7 @@ HEADERS  += include/MainWindow.h \
             include/ImageViewer.h \
             include/Scanner.h \
             include/Library.h \
+            include/SearchEngine.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
             include/OcrSettings.h \
