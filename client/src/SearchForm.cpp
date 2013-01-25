@@ -153,15 +153,18 @@ namespace vaultaire
 	/** Create buttons */
 	void SearchForm::createButtons()
 	{
-		searchButton = new QPushButton(tr("&Search"), this);
+		searchButton = new QPushButton(QIcon::fromTheme("edit-find"),
+			tr("&Search"), this);
 		searchButton->setEnabled(false);
 		connect(searchButton, SIGNAL(clicked()), this, SLOT(search()));
 
-		resetButton = new QPushButton(tr("&Reset"), this);
+		resetButton = new QPushButton(QIcon::fromTheme("edit-clear"),
+			tr("&Reset"), this);
 		resetButton->setEnabled(false);
 		connect(resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 
-		cancelButton = new QPushButton(tr("&Cancel"), this);
+		cancelButton = new QPushButton(QIcon::fromTheme("edit-delete"),
+			tr("&Cancel"), this);
 		cancelButton->setEnabled(false);
 		connect(cancelButton, SIGNAL(clicked()), engine, SLOT(cancel()));
 	}

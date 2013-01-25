@@ -245,27 +245,32 @@ namespace vaultaire
 
 	void ScanForm::createButtons()
 	{
-		scanPreviewButton = new QPushButton(tr("&Scan"), this);
+		scanPreviewButton = new QPushButton(QIcon::fromTheme("scanner"),
+			tr("&Scan"), this);
 		scanPreviewButton->setEnabled(false);
 		connect(scanPreviewButton, SIGNAL(clicked()),
 			this, SLOT(scan()));
 
-		cancelButton = new QPushButton(tr("&Cancel"), this);
+		cancelButton = new QPushButton(QIcon::fromTheme("edit-delete"),
+			tr("&Cancel"), this);
 		cancelButton->setEnabled(false);
 		connect(cancelButton, SIGNAL(clicked()),
 			this, SLOT(cancel()));
 
-		acceptScanButton = new QPushButton(tr("Sa&ve"), this);
+		acceptScanButton = new QPushButton(QIcon::fromTheme("document-save"),
+			tr("Sa&ve"), this);
 		acceptScanButton->setEnabled(false);
 		connect(acceptScanButton, SIGNAL(clicked()),
 			this, SLOT(save()));
 
-		rejectScanButton = new QPushButton(tr("R&e-scan"), this);
+		rejectScanButton = new QPushButton(QIcon::fromTheme("edit-redo"),
+			tr("R&e-scan"), this);
 		rejectScanButton->setEnabled(false);
 		connect(rejectScanButton, SIGNAL(clicked()),
 			this, SLOT(redo()));
 
-		resetButton = new QPushButton(tr("&Reset"), this);
+		resetButton = new QPushButton(QIcon::fromTheme("edit-clear"),
+			tr("&Reset"), this);
 		resetButton->setEnabled(false);
 		connect(resetButton, SIGNAL(clicked()),
 			this, SLOT(reset()));
