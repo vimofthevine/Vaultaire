@@ -16,6 +16,7 @@
 
 #include <QtGui>
 
+#include "AppearanceSettings.h"
 #include "LibraryBrowser.h"
 #include "LibrarySettings.h"
 #include "MainMenu.h"
@@ -41,6 +42,9 @@ namespace vaultaire
 
 		OcrSettings* ocrSettings = new OcrSettings;
 		settingsDialog->add(tr("OCR"), ocrSettings);
+
+		AppearanceSettings* appearanceSettings = new AppearanceSettings;
+		settingsDialog->add(tr("Appearance"), appearanceSettings);
 
 		scanForm = new ScanForm(this);
 		browser = new LibraryBrowser(this);
