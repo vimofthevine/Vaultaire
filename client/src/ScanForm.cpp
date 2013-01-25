@@ -64,7 +64,6 @@ namespace vaultaire
 		leftWidget->setLayout(leftLayout);
 
 		imageViewer = new ImageViewer(this);
-		imageViewer->clear();
 
 		addWidget(leftWidget);
 		addWidget(imageViewer);

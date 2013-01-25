@@ -38,6 +38,8 @@ namespace vaultaire
 
 		createActions();
 		createMenu();
+
+		clear();
 	}
 
 	/** Open */
