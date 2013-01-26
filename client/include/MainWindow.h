@@ -28,7 +28,7 @@ namespace vaultaire
 	class LibraryBrowser;
 	class MainMenu;
 	class ScanForm;
-	class SearchForm;
+	class SearchView;
 	class SettingsDialog;
 
 	/**
@@ -61,7 +61,7 @@ namespace vaultaire
 			QStackedWidget* stack;
 			ScanForm* scanForm;
 			LibraryBrowser* browser;
-			SearchForm* searchForm;
+			SearchView* search;
 	};
 }
 

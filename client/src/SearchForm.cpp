@@ -23,12 +23,12 @@
 namespace vaultaire
 {
 	/** Constructor */
-	SearchForm::SearchForm(QWidget* parent) : QWidget(parent)
+	SearchForm::SearchForm(SearchEngine* engine, QWidget* parent)
+		: QWidget(parent), engine(engine)
 	{
 		settings = new QSettings(QSettings::SystemScope,
 			qApp->organizationName(), qApp->applicationName(), this);
 
-		engine = new SearchEngine(settings, this);
 		connect(engine, SIGNAL(started()), this, SLOT(searchStarted()));
 		connect(engine, SIGNAL(failed()), this, SLOT(searchFailed()));
 		connect(engine, SIGNAL(finished(QStringList)),

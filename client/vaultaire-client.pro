@@ -14,6 +14,8 @@ SOURCES += src/main.cpp \
            src/MainMenu.cpp \
            src/ScanForm.cpp \
            src/SearchForm.cpp \
+           src/SearchView.cpp \
+           src/LibraryEntry.cpp \
            src/LibraryBrowser.cpp \
            src/FileBrowser.cpp \
            src/ImageViewer.cpp \
@@ -30,6 +32,8 @@ HEADERS  += include/MainWindow.h \
             include/MainMenu.h \
             include/ScanForm.h \
             include/SearchForm.h \
+            include/SearchView.h \
+            include/LibraryEntry.h \
             include/LibraryBrowser.h \
             include/FileBrowser.h \
             include/ImageViewer.h \
@@ -49,4 +53,6 @@ OBJECTS_DIR = build/objs
 MOC_DIR = build/moc
 RCC_DIR = build/rcc
 UI_DIR = build/ui
+
+#QMAKE_CXXFLAGS +=-ggdb
 

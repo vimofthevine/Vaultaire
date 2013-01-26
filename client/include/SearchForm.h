@@ -41,9 +41,10 @@ namespace vaultaire
 			/**
 			 * Constructs a new search form widget.
 			 *
+			 * @param engine search engine
 			 * @param parent parent widget
 			 */
-			SearchForm(QWidget* parent = 0);
+			SearchForm(SearchEngine* engine, QWidget* parent = 0);
 
 		private slots:
 			void reset();
