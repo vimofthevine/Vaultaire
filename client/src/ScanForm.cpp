@@ -67,7 +67,7 @@ namespace vaultaire
 
 		addWidget(leftWidget);
 		addWidget(imageViewer);
-		setStretchFactor(1, 2);
+		setStretchFactor(1, 2); // Give more weight to the viewer
 	}
 
 	/* Scan button hit */

@@ -52,6 +52,7 @@ namespace vaultaire
 
 		addWidget(leftWidget);
 		addWidget(viewer);
+		setStretchFactor(1, 2); // Give more weight to the viewer
 	}
 
 	//--------------------------------------------------------------------------

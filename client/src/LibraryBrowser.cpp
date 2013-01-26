@@ -35,7 +35,8 @@ namespace vaultaire
 
 		addWidget(fileBrowser);
 		addWidget(imageViewer);
-	}
+		setStretchFactor(1, 2); // Give more weight to the viewer
+}
 
 	/** Directory-change */
 	void LibraryBrowser::handleDirectoryChange()
