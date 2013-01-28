@@ -66,6 +66,7 @@ namespace vaultaire
 
 		setWindowTitle(tr("Vaultaire"));
 		setCentralWidget(stack);
+		setWindowIcon(QIcon(":/vaultaire.svg"));
 
 		readSettings();
 	}
@@ -129,7 +130,19 @@ namespace vaultaire
 	void MainWindow::about()
 	{
 		QMessageBox::about(this, tr("About"),
-			tr("About Vaultaire"));
+			tr(QString("<dl>"
+				"<dt>Title</dt><dd>%1</dd>"
+				"<dt>Version</dt><dd>%2</dd>"
+				"<dt>Copyright</dt><dd>Copyright (C) 2013</dd>"
+				"<dt>License</dt><dd>Apache License 2.0</dd>"
+				"<dt>Authors</dt><dd>Kyle Treubig</dd>"
+				"<dt>URL</dt><dd><a href=\"http://%3\">%3</a></dd>"
+				"</dl>")
+				.arg(qApp->applicationName())
+				.arg(qApp->applicationVersion())
+				.arg(qApp->organizationDomain())
+				.toUtf8()
+			));
 	}
 }
 

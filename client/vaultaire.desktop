@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Vaultaire
+Comment=Document Scanning and Tagging
+Icon=vaultaire
+TryExec=vaultaire
+Exec=vaultaire %F
+Terminal=false
+Categories=Office;

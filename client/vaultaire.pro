@@ -6,7 +6,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = vaultaire-client
+TARGET = vaultaire
 TEMPLATE = app
 
 SOURCES += src/main.cpp \
@@ -45,6 +45,8 @@ HEADERS  += include/MainWindow.h \
             include/OcrSettings.h \
             include/AppearanceSettings.h \
             include/SettingsDialog.h
+
+RESOURCES += vaultaire.qrc
 
 INCLUDEPATH += ./include
 
