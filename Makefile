@@ -16,7 +16,7 @@ all: $(CLIENTBIN)
 
 # Build client (GUI) application
 $(CLIENTBIN):
-	cd client && qmake && make
+	cd client && qmake && $(MAKE)
 
 install: $(BINS)
 	$(INSTALL) -d -m 755 $(BINDIR)
