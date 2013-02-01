@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kyle Treubig
+ * Copyright 2013 Kyle Treubig
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,33 +32,42 @@ namespace vaultaire
 	{
 		// Scan new file
 		scanFileAction = new QAction(tr("&New"), this);
-		scanFileAction->setIcon(QIcon(":/icons/new-scan.png"));
+		scanFileAction->setIcon(QIcon::fromTheme("scanner"));
 		scanFileAction->setShortcut(QKeySequence::New);
 		scanFileAction->setStatusTip("Scan a new file into the library");
 		connect(scanFileAction, SIGNAL(triggered()), this, SIGNAL(scanNewFile()));
 
+		// Browse files
+		browseFilesAction = new QAction(tr("&Browse"), this);
+		browseFilesAction->setIcon(QIcon::fromTheme("system-file-manager"));
+		browseFilesAction->setShortcut(QKeySequence::Open);
+		browseFilesAction->setStatusTip("Browse through files in the library");
+		connect(browseFilesAction, SIGNAL(triggered()), this, SIGNAL(browseFiles()));
+
 		// Find file
 		findFileAction = new QAction(tr("&Find"), this);
-		findFileAction->setIcon(QIcon(":/icons/find.png"));
+		findFileAction->setIcon(QIcon::fromTheme("edit-find"));
 		findFileAction->setShortcut(QKeySequence::Find);
 		findFileAction->setStatusTip("Find a file in the library");
 		connect(findFileAction, SIGNAL(triggered()), this, SIGNAL(findFile()));
 
 		// Quit
 		quitAction = new QAction(tr("E&xit"), this);
+		quitAction->setIcon(QIcon::fromTheme("application-exit"));
 		quitAction->setShortcut(tr("Ctrl+Q"));
 		quitAction->setStatusTip(tr("Exit the application"));
 		connect(quitAction, SIGNAL(triggered()), this, SIGNAL(quit()));
 
 		// Settings
 		settingsAction = new QAction(tr("&Settings"), this);
-		settingsAction->setIcon(QIcon(":/icons/settings.png"));
+		settingsAction->setIcon(QIcon::fromTheme("preferences-system"));
 		settingsAction->setShortcut(QKeySequence::Preferences);
 		settingsAction->setStatusTip(tr("Edit application settings"));
 		connect(settingsAction, SIGNAL(triggered()), this, SIGNAL(editSettings()));
 
 		// About
 		aboutAction = new QAction(tr("&About"), this);
+		aboutAction->setIcon(QIcon::fromTheme("help-about"));
 		aboutAction->setStatusTip(tr("Show the about box"));
 		connect(aboutAction, SIGNAL(triggered()), this, SIGNAL(showAboutInfo()));
 	}
@@ -68,6 +77,7 @@ namespace vaultaire
 	{
 		fileMenu = addMenu(tr("&File"));
 		fileMenu->addAction(scanFileAction);
+		fileMenu->addAction(browseFilesAction);
 		fileMenu->addAction(findFileAction);
 		fileMenu->addSeparator();
 		fileMenu->addAction(quitAction);

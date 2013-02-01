@@ -14,54 +14,43 @@
  * limitations under the License.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef OCRSETTINGS_H
+#define OCRSETTINGS_H
 
-#include <QMainWindow>
+#include <QWidget>
 
 // Forward declarations
-class QStackedWidget;
+class QCheckBox;
+class QSettings;
+class QTextEdit;
 
 namespace vaultaire
 {
-	// Forward declarations
-	class LibraryBrowser;
-	class MainMenu;
-	class ScanForm;
-	class SearchView;
-	class SettingsDialog;
-
 	/**
-	 * The application's main, primary window.
+	 * OCR settings panel.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
-	class MainWindow : public QMainWindow
+	class OcrSettings : public QWidget
 	{
 		Q_OBJECT
 
 		public:
-			MainWindow();
-
-		protected:
-			void closeEvent(QCloseEvent* event);
+			/**
+			 * Constructs a new OCR settings panel.
+			 *
+			 * @param parent parent widget
+			 */
+			OcrSettings(QWidget* parent = 0);
 
 		private slots:
-			void showScanForm();
-			void showFileBrowser();
-			void showSearchForm();
-			void about();
+			void doOcrChanged(bool doOcr);
+			void ocrCommandChanged();
 
 		private:
-			void writeSettings();
-			void readSettings();
-
-			MainMenu* mainMenu;
-			SettingsDialog* settingsDialog;
-			QStackedWidget* stack;
-			ScanForm* scanForm;
-			LibraryBrowser* browser;
-			SearchView* search;
+			QSettings* settings;
+			QCheckBox* doOcr;
+			QTextEdit* ocrCommand;
 	};
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kyle Treubig
+ * Copyright 2013 Kyle Treubig
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@
 #include <QtGui>
 
 #include "LibrarySettings.h"
+#include "SettingKeys.h"
 
 namespace vaultaire
 {
-	// Library root
-	static const QString& LIB_ROOT_KEY = "LibraryRootDirectory";
-	static const QString& DEFAULT_LIB_ROOT = "~/Documents/Library";
 	static const QString& LIB_ROOT_HELP = "Root directory in which all library documents are found";
 
 	/** Constructor */

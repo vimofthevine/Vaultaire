@@ -14,44 +14,41 @@
  * limitations under the License.
  */
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef FILEBROWSER_H
+#define FILEBROWSER_H
 
-#include <QDialog>
+#include <QTableView>
 
 // Forward declarations
-class QListWidget;
-class QStackedWidget;
+class QFileSystemModel;
+class QModelIndex;
+class QTreeView;
 
 namespace vaultaire
 {
-	/**
-	 * Application settings and preferences dialog.
-	 *
-	 * @author Kyle Treubig <kyle@vimofthevine.com>
-	 */
-	class SettingsDialog : public QDialog
+	class FileBrowser : public QTableView
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a new settings dialog.
-			 */
-			SettingsDialog(QWidget* parent = 0);
-
-			/**
-			 * Adds a new settings page to the
-			 * settings dialog.
+			 * Constructs a new file browser widget.
 			 *
-			 * @param label settings category label
-			 * @param page  settings widget
+			 * @param parent parent widget
 			 */
-			void add(const QString& label, QWidget* page);
+			FileBrowser(QWidget* parent = 0);
+
+		private slots:
+			void handleDoubleClick(const QModelIndex& index);
+			void handleSelection(const QModelIndex& index, const QModelIndex& prev);
+
+		signals:
+			void directoryChanged(const QString& directory);
+			void fileSelected(const QString& filepath);
 
 		private:
-			QListWidget* selection;
-			QStackedWidget* pages;
+			QString libRoot;
+			QFileSystemModel* fsModel;
 	};
 }
 

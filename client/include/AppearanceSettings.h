@@ -14,55 +14,42 @@
  * limitations under the License.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef APPEARANCESETTINGS_H
+#define APPEARANCESETTINGS_H
 
-#include <QMainWindow>
+#include <QWidget>
 
-// Forward declarations
-class QStackedWidget;
+class QLineEdit;
+class QSettings;
 
 namespace vaultaire
 {
-	// Forward declarations
-	class LibraryBrowser;
-	class MainMenu;
-	class ScanForm;
-	class SearchView;
-	class SettingsDialog;
-
 	/**
-	 * The application's main, primary window.
+	 * Appearance settings panel.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
-	class MainWindow : public QMainWindow
+	class AppearanceSettings : public QWidget
 	{
 		Q_OBJECT
 
 		public:
-			MainWindow();
-
-		protected:
-			void closeEvent(QCloseEvent* event);
+			/**
+			 * Constructs a new appearance settings panel.
+			 *
+			 * @param parent parent widget
+			 */
+			AppearanceSettings(QWidget* parent = 0);
 
 		private slots:
-			void showScanForm();
-			void showFileBrowser();
-			void showSearchForm();
-			void about();
+			void iconThemeChanged(const QString& newTheme);
 
 		private:
-			void writeSettings();
-			void readSettings();
-
-			MainMenu* mainMenu;
-			SettingsDialog* settingsDialog;
-			QStackedWidget* stack;
-			ScanForm* scanForm;
-			LibraryBrowser* browser;
-			SearchView* search;
+			/** User settings */
+			QSettings* settings;
+			/** Icon theme field */
+			QLineEdit* iconTheme;
 	};
 }
 
-#endif
+#endif // APPEARANCESETTINGS_H

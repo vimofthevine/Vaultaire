@@ -14,55 +14,56 @@
  * limitations under the License.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef SEARCHVIEW_H
+#define SEARCHVIEW_H
 
-#include <QMainWindow>
+#include <QList>
+#include <QSplitter>
 
 // Forward declarations
-class QStackedWidget;
+class QListWidget;
+class QSettings;
 
 namespace vaultaire
 {
 	// Forward declarations
-	class LibraryBrowser;
-	class MainMenu;
-	class ScanForm;
-	class SearchView;
-	class SettingsDialog;
+	class ImageViewer;
+	class LibraryEntry;
+	class SearchEngine;
+	class SearchForm;
 
-	/**
-	 * The application's main, primary window.
-	 *
-	 * @author Kyle Treubig <kyle@vimofthevine.com>
-	 */
-	class MainWindow : public QMainWindow
+	class SearchView : public QSplitter
 	{
 		Q_OBJECT
 
 		public:
-			MainWindow();
+			/**
+			 * Constructs a new search view.
+			 *
+			 * @param parent parent widget
+			 */
+			SearchView(QWidget* parent = 0);
 
-		protected:
-			void closeEvent(QCloseEvent* event);
+			/**
+			 * Destructor
+			 */
+			virtual ~SearchView();
 
 		private slots:
-			void showScanForm();
-			void showFileBrowser();
-			void showSearchForm();
-			void about();
+			void searchFinished(const QStringList& results);
+			void resultSelected(int row);
 
 		private:
-			void writeSettings();
-			void readSettings();
+			void deleteFoundEntries();
 
-			MainMenu* mainMenu;
-			SettingsDialog* settingsDialog;
-			QStackedWidget* stack;
-			ScanForm* scanForm;
-			LibraryBrowser* browser;
-			SearchView* search;
+			QSettings* settings;
+			SearchEngine* engine;
+			SearchForm* form;
+			ImageViewer* viewer;
+			QListWidget* resultList;
+			QList<LibraryEntry*> libEntries;
 	};
+
 }
 
-#endif
+#endif // SEARCHVIEW_H

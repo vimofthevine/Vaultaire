@@ -14,54 +14,41 @@
  * limitations under the License.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef LIBRARYBROWSER_H
+#define LIBRARYBROWSER_H
 
-#include <QMainWindow>
-
-// Forward declarations
-class QStackedWidget;
+#include <QSplitter>
 
 namespace vaultaire
 {
 	// Forward declarations
-	class LibraryBrowser;
-	class MainMenu;
-	class ScanForm;
-	class SearchView;
-	class SettingsDialog;
+	class FileBrowser;
+	class ImageViewer;
 
 	/**
-	 * The application's main, primary window.
+	 * Library file browser widget.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
-	class MainWindow : public QMainWindow
+	class LibraryBrowser : public QSplitter
 	{
 		Q_OBJECT
 
 		public:
-			MainWindow();
-
-		protected:
-			void closeEvent(QCloseEvent* event);
+			/**
+			 * Constructs a new library browser widget.
+			 *
+			 * @param parent parent widget
+			 */
+			LibraryBrowser(QWidget* parent = 0);
 
 		private slots:
-			void showScanForm();
-			void showFileBrowser();
-			void showSearchForm();
-			void about();
+			void handleDirectoryChange();
+			void handleFileSelection(const QString& filepath);
 
 		private:
-			void writeSettings();
-			void readSettings();
-
-			MainMenu* mainMenu;
-			SettingsDialog* settingsDialog;
-			QStackedWidget* stack;
-			ScanForm* scanForm;
-			LibraryBrowser* browser;
-			SearchView* search;
+			FileBrowser* fileBrowser;
+			ImageViewer* imageViewer;
 	};
 }
 

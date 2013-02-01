@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kyle Treubig
+ * Copyright 2013 Kyle Treubig
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,8 @@ namespace vaultaire
 		signals:
 			/** Scan new file */
 			void scanNewFile();
+			/** Browse files */
+			void browseFiles();
 			/** Find file */
 			void findFile();
 			/** Quit application */
@@ -56,6 +58,7 @@ namespace vaultaire
 			QMenu* helpMenu;
 
 			QAction* scanFileAction;
+			QAction* browseFilesAction;
 			QAction* findFileAction;
 			QAction* quitAction;
 			QAction* settingsAction;
