@@ -12,6 +12,7 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
+           src/MetaDataForm.cpp \
            src/ScanView.cpp \
            src/SearchForm.cpp \
            src/SearchView.cpp \
@@ -30,6 +31,7 @@ SOURCES += src/main.cpp \
 
 HEADERS  += include/MainWindow.h \
             include/MainMenu.h \
+            include/MetaDataForm.h \
             include/ScanView.h \
             include/SearchForm.h \
             include/SearchView.h \
