@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset='utf-8'>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>vimofthevine | Vaultaire</title>
+
+		<link rel="stylesheet" href="http://vimofthevine.com/assets/css/bootstrap.min.css" type="text/css" />
+		<style type="text/css">
+			body {
+				padding-top:60px;
+				padding-bottom:40px;
+			}
+		</style>
+		<link rel="stylesheet" href="http://vimofthevine.com/assets/css/bootstrap-responsive.min.css" type="text/css" />
+
+		<script type="text/javascript">
+		function recordOutboundLink(link, category, action) {
+			try {
+				var myTracker=_gat._getTrackerByName();
+				_gaq.push(['myTracker._trackEvent', category , action ]);
+				setTimeout('document.location = "' + link.href + '"', 100)
+			}catch(err){}
+		}
+		</script>
+
+		<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="#">Vaultaire</a>
+					<!--
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<li><a href="https://github.com/vimofthevine/UnderBudget/wiki" onClick="recordOutboundLink(this,
+								'Exit', 'https://github.com/vimofthevine/UnderBudget/wiki'); return false;">User Guide</a></li>
+							<li><a href="https://github.com/vimofthevine/UnderBudget/downloads" onClick="recordOutboundLink(this,
+								'Exit', 'https://github.com/vimofthevine/UnderBudget/downloads'); return false;">Downloads</a></li>
+							<li><a href="http://forums.underbudget.vimofthevine.com" onClick="recordOutboundLink(this,
+								'Exit', 'http://forums.underbudget.vimofthevine.com'); return false;">Forums</a></li>
+						</ul>
+					</div>
+					-->
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+
+			<div class="hero-unit">
+				<img id="logo" src="http://vimofthevine.com/assets/img/vaultaire.png" alt="" style="float:right" />
+				<h1>Vaultaire</h1>
+				<h2>Document Scanning &amp; Tagging for Linux</h2>
+			</div>
+
+			{{ content }}
+
+			<div class="row">
+				<div class="span12" style="text-align:center">
+					<script type="text/javascript"><!--
+						google_ad_client = "ca-pub-7186650959248368";
+						/* vimofthevine */
+						google_ad_slot = "7041465182";
+						google_ad_width = 728;
+						google_ad_height = 90;
+						//-->
+					</script>
+					<script type="text/javascript"
+						src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+					</script>
+				</div>
+			</div>
+
+			<hr/>
+
+			<footer>
+				<p>&copy; 2013 Kyle Treubig</p>
+			</footer>
+
+		</div> <!-- class="container" -->
+
+		<!-- Google Analytics -->
+		<script type="text/javascript">
+
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-34906667-4']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+
+		</script>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+		<script src="http://vimofthevine.com/assets/js/bootstrap.min.js"></script>
+	</body>
+</html>
+
