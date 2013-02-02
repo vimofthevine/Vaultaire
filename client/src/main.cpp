@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	app.setOrganizationName("vimofthevine");
 	app.setOrganizationDomain("vautlaire.vimofthevine.com");
 	app.setApplicationName("Vaultaire");
-	app.setApplicationVersion("1.0");
+	app.setApplicationVersion("1.0rc1");
 
 	vaultaire::MainWindow* mainWindow = new vaultaire::MainWindow();
 	mainWindow->show();
