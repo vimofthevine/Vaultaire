@@ -1,10 +1,13 @@
 INSTALL = install
 
-CLIENTBIN = client/bin/vaultaire
-DESKTOPFILE = client/vaultaire.desktop
-ICONFILE = client/icons/hicolor/scalable/apps/vaultaire.svg
+CLIENTBIN = vaultaire
+SRCBIN = client/bin/$(CLIENTBIN)
+DESKTOPFILE = vaultaire.desktop
+SRCDESKTOPFILE = client/$(DESKTOPFILE)
+ICONFILE = vaultaire.svg
+SRCICON = client/icons/hicolor/scalable/apps/$(ICONFILE)
 
-prefix = $(DESKDIR)/usr
+prefix = $(DESTDIR)/usr
 BINDIR = $(prefix)/bin
 DATADIR = $(prefix)/share
 DESKTOPDIR = $(DATADIR)/applications
@@ -20,11 +23,11 @@ $(CLIENTBIN):
 
 install: $(BINS)
 	$(INSTALL) -d -m 755 $(BINDIR)
-	$(INSTALL) -m 755 $(CLIENTBIN) $(BINDIR)
+	$(INSTALL) -m 755 $(SRCBIN) $(BINDIR)
 	$(INSTALL) -d -m 755 $(DESKTOPDIR)
-	$(INSTALL) -m 644 $(DESKTOPFILE) $(DESKTOPDIR)
+	$(INSTALL) -m 644 $(SRCDESKTOPFILE) $(DESKTOPDIR)
 	$(INSTALL) -d -m 755 $(ICONDIR)
-	$(INSTALL) -m 644 $(ICONFILE) $(ICONDIR)
+	$(INSTALL) -m 644 $(SRCICON) $(ICONDIR)
 
 uninstall:
 	rm $(BINDIR)/$(CLIENTBIN)
