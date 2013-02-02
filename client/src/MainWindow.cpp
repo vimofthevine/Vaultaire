@@ -22,7 +22,7 @@
 #include "MainMenu.h"
 #include "MainWindow.h"
 #include "OcrSettings.h"
-#include "ScanForm.h"
+#include "ScanView.h"
 #include "ScannerSettings.h"
 #include "SearchView.h"
 #include "SettingsDialog.h"
@@ -46,12 +46,12 @@ namespace vaultaire
 		AppearanceSettings* appearanceSettings = new AppearanceSettings;
 		settingsDialog->add(tr("Appearance"), appearanceSettings);
 
-		scanForm = new ScanForm(this);
+		scanView = new ScanView(this);
 		browser = new LibraryBrowser(this);
 		search = new SearchView(this);
 
 		stack = new QStackedWidget(this);
-		stack->addWidget(scanForm);
+		stack->addWidget(scanView);
 		stack->addWidget(browser);
 		stack->addWidget(search);
 
@@ -111,7 +111,7 @@ namespace vaultaire
 	/** Scan form */
 	void MainWindow::showScanForm()
 	{
-		stack->setCurrentWidget(scanForm);
+		stack->setCurrentWidget(scanView);
 	}
 
 	/** File browser */

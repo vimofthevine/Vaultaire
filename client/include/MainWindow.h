@@ -27,7 +27,7 @@ namespace vaultaire
 	// Forward declarations
 	class LibraryBrowser;
 	class MainMenu;
-	class ScanForm;
+	class ScanView;
 	class SearchView;
 	class SettingsDialog;
 
@@ -59,7 +59,7 @@ namespace vaultaire
 			MainMenu* mainMenu;
 			SettingsDialog* settingsDialog;
 			QStackedWidget* stack;
-			ScanForm* scanForm;
+			ScanView* scanView;
 			LibraryBrowser* browser;
 			SearchView* search;
 	};

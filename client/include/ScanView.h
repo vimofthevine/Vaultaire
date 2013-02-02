@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SCANFORM_H
-#define SCANFORM_H
+#ifndef SCANVIEW_H
+#define SCANVIEW_H
 
 #include <QSplitter>
 
@@ -34,17 +34,17 @@ namespace vaultaire
 	class ImageViewer;
 	class Library;
 
-	class ScanForm : public QSplitter
+	class ScanView : public QSplitter
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a new scan form widget.
+			 * Constructs a new scan view.
 			 *
 			 * @param parent parent widget
 			 */
-			ScanForm(QWidget* parent = 0);
+			ScanView(QWidget* parent = 0);
 
 		private slots:
 			void updateButtons();

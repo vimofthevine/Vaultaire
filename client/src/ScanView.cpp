@@ -18,12 +18,12 @@
 
 #include "ImageViewer.h"
 #include "Library.h"
-#include "ScanForm.h"
+#include "ScanView.h"
 #include "SettingKeys.h"
 
 namespace vaultaire
 {
-	ScanForm::ScanForm(QWidget* parent) : QSplitter(parent)
+	ScanView::ScanView(QWidget* parent) : QSplitter(parent)
 	{
 		settings = new QSettings(QSettings::SystemScope,
 			qApp->organizationName(),
@@ -71,7 +71,7 @@ namespace vaultaire
 	}
 
 	/* Scan button hit */
-	void ScanForm::scan()
+	void ScanView::scan()
 	{
 		QString userTitle = title->text();
 		qDebug() << "User title: " << userTitle;
@@ -81,7 +81,7 @@ namespace vaultaire
 	}
 
 	/* Save button hit */
-	void ScanForm::save()
+	void ScanView::save()
 	{
 		QDate docDate = date->date();
 		QString docColl = collection->text();
@@ -122,7 +122,7 @@ namespace vaultaire
 	}
 
 	/* Redo button hit */
-	void ScanForm::redo()
+	void ScanView::redo()
 	{
 		qDebug() << "re-performing scan";
 		acceptScanButton->setEnabled(false);
@@ -132,7 +132,7 @@ namespace vaultaire
 	}
 
 	/* Reset button hit */
-	void ScanForm::reset()
+	void ScanView::reset()
 	{
 		date->setDate(QDate::currentDate());
 		collection->setText("");
@@ -143,7 +143,7 @@ namespace vaultaire
 	}
 
 	/* Cancel button hit */
-	void ScanForm::cancel()
+	void ScanView::cancel()
 	{
 		if (scanner->isScanning())
 		{
@@ -169,7 +169,7 @@ namespace vaultaire
 	}
 
 	/* Scan started */
-	void ScanForm::scanStarted()
+	void ScanView::scanStarted()
 	{
 		qDebug() << "scanning started...";
 		enable(false);
@@ -177,7 +177,7 @@ namespace vaultaire
 	}
 
 	/* Scan finished */
-	void ScanForm::scanFinished(Scanner::ScanResult result)
+	void ScanView::scanFinished(Scanner::ScanResult result)
 	{
 		qDebug() << "Scanning finished " << result;
 
@@ -207,7 +207,7 @@ namespace vaultaire
 	}
 
 	/** Enable form */
-	void ScanForm::enable(bool enabled)
+	void ScanView::enable(bool enabled)
 	{
 		date->setEnabled(enabled);
 		collection->setEnabled(enabled);
@@ -226,7 +226,7 @@ namespace vaultaire
 		}
 	}
 
-	void ScanForm::updateButtons()
+	void ScanView::updateButtons()
 	{
 		bool dateIsValid = date->date().isValid();
 		bool collectionIsEmpty = collection->text().isEmpty();
@@ -243,7 +243,7 @@ namespace vaultaire
 		resetButton->setEnabled( ! formIsEmpty);
 	}
 
-	void ScanForm::createButtons()
+	void ScanView::createButtons()
 	{
 		scanPreviewButton = new QPushButton(QIcon::fromTheme("scanner"),
 			tr("&Scan"), this);
@@ -276,7 +276,7 @@ namespace vaultaire
 			this, SLOT(reset()));
 	}
 
-	void ScanForm::updateCollectionAutoCompletion()
+	void ScanView::updateCollectionAutoCompletion()
 	{
 		qDebug() << "updating auto-complete";
 		QString libRoot = settings->value(LIB_ROOT_KEY,
@@ -291,7 +291,7 @@ namespace vaultaire
 		collection->setCompleter(completer);
 	}
 
-	void ScanForm::createFields()
+	void ScanView::createFields()
 	{
 		collection = new QLineEdit("", this);
 		connect(collection, SIGNAL(textEdited(QString)),
@@ -313,7 +313,7 @@ namespace vaultaire
 		date->setCalendarPopup(true);
 	}
 
-	void ScanForm::createFSWatcher()
+	void ScanView::createFSWatcher()
 	{
 		QString libRoot = settings->value(LIB_ROOT_KEY,
 			DEFAULT_LIB_ROOT).toString();

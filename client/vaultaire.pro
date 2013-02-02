@@ -12,7 +12,7 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
-           src/ScanForm.cpp \
+           src/ScanView.cpp \
            src/SearchForm.cpp \
            src/SearchView.cpp \
            src/LibraryEntry.cpp \
@@ -30,7 +30,7 @@ SOURCES += src/main.cpp \
 
 HEADERS  += include/MainWindow.h \
             include/MainMenu.h \
-            include/ScanForm.h \
+            include/ScanView.h \
             include/SearchForm.h \
             include/SearchView.h \
             include/LibraryEntry.h \
