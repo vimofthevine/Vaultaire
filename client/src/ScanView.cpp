@@ -18,37 +18,27 @@
 
 #include "ImageViewer.h"
 #include "Library.h"
+#include "MetaDataForm.h"
+#include "Scanner.h"
 #include "ScanView.h"
 #include "SettingKeys.h"
 
 namespace vaultaire
 {
-	ScanView::ScanView(QWidget* parent) : QSplitter(parent)
+	//--------------------------------------------------------------------------
+	ScanView::ScanView(Scanner* scanner, QWidget* parent) :
+		QSplitter(parent), scanner(scanner), library(new Library(this)),
+		imageViewer(new ImageViewer(this))
 	{
 		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(),
-			qApp->applicationName(),
-			this);
+			qApp->organizationName(), qApp->applicationName(), this);
+		metaForm = new MetaDataForm(settings, this);
 
-		scanner = new Scanner(settings, this);
 		connect(scanner, SIGNAL(started()), this, SLOT(scanStarted()));
 		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
 			this, SLOT(scanFinished(Scanner::ScanResult)));
 
-		library = new Library(this);
-
 		createButtons();
-		createFields();
-		updateCollectionAutoCompletion();
-		createFSWatcher();
-
-		QFormLayout* formLayout = new QFormLayout;
-		formLayout->addRow(tr("Date"), date);
-		formLayout->addRow(tr("Collection"), collection);
-		formLayout->addRow(tr("Category"), category);
-		formLayout->addRow(tr("Title"), title);
-		formLayout->addRow(tr("Tags"), tags);
-
 		QHBoxLayout* buttonsLayout = new QHBoxLayout;
 		buttonsLayout->addWidget(scanPreviewButton);
 		buttonsLayout->addWidget(cancelButton);
@@ -56,93 +46,89 @@ namespace vaultaire
 		buttonsLayout->addWidget(rejectScanButton);
 		buttonsLayout->addWidget(resetButton);
 
+		connect(metaForm, SIGNAL(isEmpty(bool)), this, SLOT(formIsEmpty(bool)));
+		connect(metaForm, SIGNAL(isValid(bool)),
+			scanPreviewButton, SLOT(setEnabled(bool)));
+
 		QVBoxLayout* leftLayout = new QVBoxLayout;
-		leftLayout->addLayout(formLayout);
+		leftLayout->addWidget(metaForm);
 		leftLayout->addLayout(buttonsLayout);
 
 		QWidget* leftWidget = new QWidget(this);
 		leftWidget->setLayout(leftLayout);
-
-		imageViewer = new ImageViewer(this);
 
 		addWidget(leftWidget);
 		addWidget(imageViewer);
 		setStretchFactor(1, 2); // Give more weight to the viewer
 	}
 
-	/* Scan button hit */
+	//--------------------------------------------------------------------------
+	void ScanView::formIsEmpty(bool empty)
+	{
+		// Can't reset if already empty
+		resetButton->setEnabled( ! empty);
+	}
+
+	//--------------------------------------------------------------------------
 	void ScanView::scan()
 	{
-		QString userTitle = title->text();
-		qDebug() << "User title: " << userTitle;
-		filename = "/tmp/" + Library::sanitize(userTitle);
+		QString title = metaForm->title();
+		qDebug() << "User title: " << title;
+		filename = "/tmp/" + Library::sanitize(title);
 		qDebug() << "Filename: " << filename;
 		scanner->scan(filename);
 	}
 
-	/* Save button hit */
+	//--------------------------------------------------------------------------
 	void ScanView::save()
 	{
-		QDate docDate = date->date();
-		QString docColl = collection->text();
-		QString docCat = category->text();
-		QString docTitle = title->text();
-		QString docTags = tags->text();
+		// Get meta-data from form
+		QDate date = metaForm->date();
+		QString collection = metaForm->collection();
+		QString category = metaForm->category();
+		QString title = metaForm->title();
+		QString tags = metaForm->tags();
 
 		qDebug() << "Saving " << filename
-			<< " with date=" << docDate
-			<< ", collection=" << docColl
-			<< ", category=" << docCat
-			<< ", title=" << docTitle
-			<< ", & tags=" << docTags;
+			<< " with date=" << date
+			<< ", collection=" << collection
+			<< ", category=" << category
+			<< ", title=" << title
+			<< ", & tags=" << tags;
 
-		if ( ! library->add(filename, docDate,
-			docColl, docCat, docTitle, docTags))
+		if ( ! library->add(filename, date, collection,
+			category, title, tags))
 		{
 			QMessageBox::warning(this, "Save File Error",
 				"An error occured adding the document to the library");
+			state = WaitingForAccept;
 		}
 		else
 		{
-			reset();
+			state = WaitingForInput;
+			metaForm->reset();
 			imageViewer->clear();
+
+			// Clean up the temporary file (if it exists)
+			QFile file(filename);
+			if (file.exists())
+			{
+				file.remove();
+			}
 		}
 
-		enable(true);
-		cancelButton->setEnabled(false);
-		acceptScanButton->setEnabled(false);
-		rejectScanButton->setEnabled(false);
-
-		// Clean up the temporary file
-		QFile file(filename);
-		if (file.exists())
-		{
-			file.remove();
-		}
+		update();
 	}
 
-	/* Redo button hit */
+	//--------------------------------------------------------------------------
 	void ScanView::redo()
 	{
 		qDebug() << "re-performing scan";
-		acceptScanButton->setEnabled(false);
-		rejectScanButton->setEnabled(false);
 		imageViewer->clear();
 		scan();
 	}
 
-	/* Reset button hit */
-	void ScanView::reset()
-	{
-		date->setDate(QDate::currentDate());
-		collection->setText("");
-		category->setText("");
-		title->setText("");
-		tags->setText("");
-		updateButtons();
-	}
-
-	/* Cancel button hit */
+	//--------------------------------------------------------------------------
 	void ScanView::cancel()
 	{
 		if (scanner->isScanning())
@@ -154,29 +140,28 @@ namespace vaultaire
 		{
 			qDebug() << "User cancelled post-scan";
 			imageViewer->clear();
-			cancelButton->setEnabled(false);
-			acceptScanButton->setEnabled(false);
-			rejectScanButton->setEnabled(false);
-			enable(true);
-			updateButtons();
-		}
+			state = WaitingForInput;
 
-		QFile file(filename);
-		if (file.exists())
-		{
-			file.remove();
+			// Clean up the temporary file (if it exists)
+			QFile file(filename);
+			if (file.exists())
+			{
+				file.remove();
+			}
+
+			update();
 		}
 	}
 
-	/* Scan started */
+	//--------------------------------------------------------------------------
 	void ScanView::scanStarted()
 	{
 		qDebug() << "scanning started...";
-		enable(false);
-		cancelButton->setEnabled(true);
+		state = Scanning;
+		update();
 	}
 
-	/* Scan finished */
+	//--------------------------------------------------------------------------
 	void ScanView::scanFinished(Scanner::ScanResult result)
 	{
 		qDebug() << "Scanning finished " << result;
@@ -185,64 +170,24 @@ namespace vaultaire
 		{
 			QMessageBox::information(this, "Scan Cancelled",
 				"Scan has been cancelled");
-			cancelButton->setEnabled(false);
-			enable(true);
-			updateButtons();
+			state = WaitingForInput;
 		}
 		else if (result == Scanner::ScanComplete)
 		{
-			cancelButton->setEnabled(true);
-			acceptScanButton->setEnabled(true);
-			rejectScanButton->setEnabled(true);
+			state = WaitingForAccept;
 			imageViewer->open(filename);
 		}
 		else
 		{
 			QMessageBox::warning(this, "Scan Error",
 				"An error occured scanning the document");
-			cancelButton->setEnabled(false);
-			enable(true);
-			updateButtons();
+			state = WaitingForInput;
 		}
+
+		update();
 	}
 
-	/** Enable form */
-	void ScanView::enable(bool enabled)
-	{
-		date->setEnabled(enabled);
-		collection->setEnabled(enabled);
-		category->setEnabled(enabled);
-		title->setEnabled(enabled);
-		tags->setEnabled(enabled);
-
-		if (enabled)
-		{
-			updateButtons();
-		}
-		else
-		{
-			scanPreviewButton->setEnabled(false);
-			resetButton->setEnabled(false);
-		}
-	}
-
-	void ScanView::updateButtons()
-	{
-		bool dateIsValid = date->date().isValid();
-		bool collectionIsEmpty = collection->text().isEmpty();
-		bool categoryIsEmpty = category->text().isEmpty();
-		bool titleIsEmpty = title->text().isEmpty();
-		bool tagIsEmpty = tags->text().isEmpty();
-
-		bool readyToScan = dateIsValid && ( ! collectionIsEmpty)
-			&& ( ! titleIsEmpty);
-		bool formIsEmpty = collectionIsEmpty
-			&& categoryIsEmpty && titleIsEmpty && tagIsEmpty;
-
-		scanPreviewButton->setEnabled(readyToScan);
-		resetButton->setEnabled( ! formIsEmpty);
-	}
-
+	//--------------------------------------------------------------------------
 	void ScanView::createButtons()
 	{
 		scanPreviewButton = new QPushButton(QIcon::fromTheme("scanner"),
@@ -273,55 +218,50 @@ namespace vaultaire
 			tr("&Reset"), this);
 		resetButton->setEnabled(false);
 		connect(resetButton, SIGNAL(clicked()),
-			this, SLOT(reset()));
+			metaForm, SLOT(reset()));
 	}
 
-	void ScanView::updateCollectionAutoCompletion()
+	//--------------------------------------------------------------------------
+	void ScanView::update()
 	{
-		qDebug() << "updating auto-complete";
-		QString libRoot = settings->value(LIB_ROOT_KEY,
-			DEFAULT_LIB_ROOT).toString();
-		qDebug() << libRoot;
+		switch (state)
+		{
+			case WaitingForInput:
+				// Reset buttons first
+				scanPreviewButton->setEnabled(false);
+				resetButton->setEnabled(false);
+				// Then form will re-enable them if needed
+				metaForm->enable(true);
 
-		QDir dir(libRoot);
-		QStringList dirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-		qDebug() << dirs;
+				cancelButton->setEnabled(false);
+				acceptScanButton->setEnabled(false);
+				rejectScanButton->setEnabled(false);
+				break;
 
-		QCompleter* completer = new QCompleter(dirs, this);
-		collection->setCompleter(completer);
+			case Scanning:
+				// Reset form first
+				metaForm->enable(false);
+				// Then make sure buttons are disabled
+				scanPreviewButton->setEnabled(false);
+				resetButton->setEnabled(false);
+
+				cancelButton->setEnabled(true);
+				acceptScanButton->setEnabled(false);
+				rejectScanButton->setEnabled(false);
+				break;
+
+			case WaitingForAccept:
+				// Reset form first
+				metaForm->enable(false);
+				// Then make sure buttons are disabled
+				scanPreviewButton->setEnabled(false);
+				resetButton->setEnabled(false);
+
+				cancelButton->setEnabled(true);
+				acceptScanButton->setEnabled(true);
+				rejectScanButton->setEnabled(true);
+				break;
+		}
 	}
-
-	void ScanView::createFields()
-	{
-		collection = new QLineEdit("", this);
-		connect(collection, SIGNAL(textEdited(QString)),
-			this, SLOT(updateButtons()));
-
-		category = new QLineEdit("", this);
-		connect(category, SIGNAL(textEdited(QString)),
-			this, SLOT(updateButtons()));
-
-		title = new QLineEdit("", this);
-		connect(title, SIGNAL(textEdited(QString)),
-			this, SLOT(updateButtons()));
-
-		tags = new QLineEdit("", this);
-		connect(tags, SIGNAL(textEdited(QString)),
-			this, SLOT(updateButtons()));
-
-		date = new QDateEdit(QDate::currentDate(), this);
-		date->setCalendarPopup(true);
-	}
-
-	void ScanView::createFSWatcher()
-	{
-		QString libRoot = settings->value(LIB_ROOT_KEY,
-			DEFAULT_LIB_ROOT).toString();
-		watcher = new QFileSystemWatcher;
-		watcher->addPath(libRoot);
-		connect(watcher, SIGNAL(directoryChanged(QString)),
-			this, SLOT(updateCollectionAutoCompletion()));
-	}
-
 }
 

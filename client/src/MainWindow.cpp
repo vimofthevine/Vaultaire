@@ -32,6 +32,9 @@ namespace vaultaire
 	/** Constructor */
 	MainWindow::MainWindow()
 	{
+		settings = new QSettings(QSettings::SystemScope,
+			qApp->organizationName(), qApp->applicationName(), this);
+
 		settingsDialog = new SettingsDialog(this);
 
 		LibrarySettings* libSettings = new LibrarySettings;
@@ -46,7 +49,8 @@ namespace vaultaire
 		AppearanceSettings* appearanceSettings = new AppearanceSettings;
 		settingsDialog->add(tr("Appearance"), appearanceSettings);
 
-		scanView = new ScanView(this);
+		scanner = new Scanner(settings, this);
+		scanView = new ScanView(scanner, this);
 		browser = new LibraryBrowser(this);
 		search = new SearchView(this);
 

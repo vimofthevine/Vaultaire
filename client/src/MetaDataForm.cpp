@@ -30,32 +30,64 @@ namespace vaultaire
 		createFileSystemWatcher();
 
 		QFormLayout* form = new QFormLayout;
-		form->addRow(tr("Date"), date);
-		form->addRow(tr("Collection"), collection);
-		form->addRow(tr("Category"), category);
-		form->addRow(tr("Title"), title);
-		form->addRow(tr("Tags"), tags);
+		form->addRow(tr("Date"), dateField);
+		form->addRow(tr("Collection"), collectionField);
+		form->addRow(tr("Category"), categoryField);
+		form->addRow(tr("Title"), titleField);
+		form->addRow(tr("Tags"), tagsField);
 		setLayout(form);
+	}
+
+	//--------------------------------------------------------------------------
+	QDate MetaDataForm::date() const
+	{
+		return dateField->date();
+	}
+
+	//--------------------------------------------------------------------------
+	QString MetaDataForm::collection() const
+	{
+		return collectionField->text();
+	}
+
+	//--------------------------------------------------------------------------
+	QString MetaDataForm::category() const
+	{
+		return categoryField->text();
+	}
+
+	//--------------------------------------------------------------------------
+	QString MetaDataForm::title() const
+	{
+		return titleField->text();
+	}
+
+	//--------------------------------------------------------------------------
+	QString MetaDataForm::tags() const
+	{
+		return tagsField->text();
 	}
 
 	//--------------------------------------------------------------------------
 	void MetaDataForm::reset()
 	{
-		date->setDate(QDate::currentDate());
-		collection->setText("");
-		category->setText("");
-		title->setText("");
-		tags->setText("");
+		dateField->setDate(QDate::currentDate());
+		collectionField->setText("");
+		categoryField->setText("");
+		titleField->setText("");
+		tagsField->setText("");
+		updateState();
 	}
 
 	//--------------------------------------------------------------------------
 	void MetaDataForm::enable(bool enabled)
 	{
-		date->setEnabled(enabled);
-		collection->setEnabled(enabled);
-		category->setEnabled(enabled);
-		title->setEnabled(enabled);
-		tags->setEnabled(enabled);
+		dateField->setEnabled(enabled);
+		collectionField->setEnabled(enabled);
+		categoryField->setEnabled(enabled);
+		titleField->setEnabled(enabled);
+		tagsField->setEnabled(enabled);
+		updateState();
 	}
 
 	//--------------------------------------------------------------------------
@@ -70,17 +102,17 @@ namespace vaultaire
 		qDebug() << dirs;
 
 		QCompleter* completer = new QCompleter(dirs, this);
-		collection->setCompleter(completer);
+		collectionField->setCompleter(completer);
 	}
 
 	//--------------------------------------------------------------------------
 	void MetaDataForm::updateState()
 	{
-		bool dateIsValid = date->date().isValid();
-		bool collectionIsEmpty = collection->text().isEmpty();
-		bool categoryIsEmpty = category->text().isEmpty();
-		bool titleIsEmpty = title->text().isEmpty();
-		bool tagIsEmpty = tags->text().isEmpty();
+		bool dateIsValid = dateField->date().isValid();
+		bool collectionIsEmpty = collectionField->text().isEmpty();
+		bool categoryIsEmpty = categoryField->text().isEmpty();
+		bool titleIsEmpty = titleField->text().isEmpty();
+		bool tagIsEmpty = tagsField->text().isEmpty();
 
 		// Date, collection, and date are required
 		bool formIsValid = dateIsValid && ( ! collectionIsEmpty)
@@ -96,23 +128,23 @@ namespace vaultaire
 	//--------------------------------------------------------------------------
 	void MetaDataForm::createFields()
 	{
-		date = new QDateEdit(QDate::currentDate(), this);
-		date->setCalendarPopup(true);
+		dateField = new QDateEdit(QDate::currentDate(), this);
+		dateField->setCalendarPopup(true);
 
-		collection = new QLineEdit("", this);
-		connect(collection, SIGNAL(textEdited(QString)),
+		collectionField = new QLineEdit("", this);
+		connect(collectionField, SIGNAL(textEdited(QString)),
 			this, SLOT(updateState()));
 
-		category = new QLineEdit("", this);
-		connect(category, SIGNAL(textEdited(QString)),
+		categoryField = new QLineEdit("", this);
+		connect(categoryField, SIGNAL(textEdited(QString)),
 			this, SLOT(updateState()));
 
-		title = new QLineEdit("", this);
-		connect(title, SIGNAL(textEdited(QString)),
+		titleField = new QLineEdit("", this);
+		connect(titleField, SIGNAL(textEdited(QString)),
 			this, SLOT(updateState()));
 
-		tags = new QLineEdit("", this);
-		connect(tags, SIGNAL(textEdited(QString)),
+		tagsField = new QLineEdit("", this);
+		connect(tagsField, SIGNAL(textEdited(QString)),
 			this, SLOT(updateState()));
 	}
 

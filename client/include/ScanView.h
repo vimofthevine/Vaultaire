@@ -21,69 +21,121 @@
 
 #include "Scanner.h"
 
-// Forward declarations
-class QDateEdit;
-class QFileSystemWatcher;
-class QLineEdit;
+// Forward declaration(s)
 class QPushButton;
 class QSettings;
 
 namespace vaultaire
 {
-	// Forward declarations
+	// Forward declaration(s)
 	class ImageViewer;
 	class Library;
+	class MetaDataForm;
 
+	/**
+	 * Widget that encompasses everything required for a scan-and-import
+	 * operation, including the meta-data form and image-viewer preview.
+	 *
+	 * @author Kyle Treubig <kyle@vimofthevine.com>
+	 */
 	class ScanView : public QSplitter
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a new scan view.
+			 * Constructs a scan-document view widget.
 			 *
-			 * @param parent parent widget
+			 * @param scanner scanner device
+			 * @param parent  parent widget
 			 */
-			ScanView(QWidget* parent = 0);
+			ScanView(Scanner* scanner, QWidget* parent = 0);
 
 		private slots:
-			void updateButtons();
-			void reset();
+			/**
+			 * Enable or disable the reset button
+			 *
+			 * @param empty true if the meta-data form is empty
+			 */
+			void formIsEmpty(bool empty);
+
+			/**
+			 * Begin scanning.
+			 */
 			void scan();
+
+			/**
+			 * Save the scanned document.
+			 */
 			void save();
+
+			/**
+			 * Re-scan the document.
+			 */
 			void redo();
+
+			/**
+			 * Cancel the current scan operation.
+			 */
 			void cancel();
-			void updateCollectionAutoCompletion();
+
+			/**
+			 * Once scanning has started, disable the form and buttons.
+			 */
 			void scanStarted();
+
+			/**
+			 * Once scanning has finished, update preview pane with
+			 * scanned document, or display error popup if an error
+			 * occurred.
+			 *
+			 * @param result scan operation result
+			 */
 			void scanFinished(Scanner::ScanResult result);
 
 		private:
-			void createButtons();
-			void createFields();
-			void createFSWatcher();
-			void enable(bool enabled);
+			/**
+			 * Enumeration for all possible states of the scan operation.
+			 */
+			enum ScanState {
+				WaitingForInput,
+				Scanning,
+				WaitingForAccept
+			};
 
-			QSettings* settings;
-			QFileSystemWatcher* watcher;
-
-			QLineEdit* collection;
-			QLineEdit* category;
-			QLineEdit* title;
-			QLineEdit* tags;
-			QDateEdit* date;
-
+			// Action buttons
 			QPushButton* scanPreviewButton;
 			QPushButton* cancelButton;
 			QPushButton* acceptScanButton;
 			QPushButton* rejectScanButton;
 			QPushButton* resetButton;
 
-			ImageViewer* imageViewer;
+			// Application settings
+			QSettings* settings;
+			// Scanner device
 			Scanner* scanner;
+			// Document library
 			Library* library;
+			// Meta-data form widget
+			MetaDataForm* metaForm;
+			// Image viewer widget
+			ImageViewer* imageViewer;
 
+			// Current state
+			ScanState state;
 			// Current file name
 			QString filename;
+
+			/**
+			 * Initializes all action buttons.
+			 */
+			void createButtons();
+
+			/**
+			 * Updates the buttons and meta-data form according
+			 * to the current state.
+			 */
+			void update();
 	};
 }
 

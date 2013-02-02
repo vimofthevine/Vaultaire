@@ -20,6 +20,7 @@
 #include <QMainWindow>
 
 // Forward declarations
+class QSettings;
 class QStackedWidget;
 
 namespace vaultaire
@@ -27,6 +28,7 @@ namespace vaultaire
 	// Forward declarations
 	class LibraryBrowser;
 	class MainMenu;
+	class Scanner;
 	class ScanView;
 	class SearchView;
 	class SettingsDialog;
@@ -56,6 +58,8 @@ namespace vaultaire
 			void writeSettings();
 			void readSettings();
 
+			QSettings* settings;
+			Scanner* scanner;
 			MainMenu* mainMenu;
 			SettingsDialog* settingsDialog;
 			QStackedWidget* stack;

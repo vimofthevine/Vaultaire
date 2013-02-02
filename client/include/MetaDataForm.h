@@ -20,6 +20,7 @@
 #include <QWidget>
 
 // Forward declaration(s)
+class QDate;
 class QDateEdit;
 class QFileSystemWatcher;
 class QLineEdit;
@@ -45,6 +46,41 @@ namespace vaultaire
 			 * @param parent   parent widget
 			 */
 			MetaDataForm(QSettings* settings, QWidget* parent = 0);
+
+			/**
+			 * Retrieves the user-specified document date.
+			 *
+			 * @return document date
+			 */
+			QDate date() const;
+
+			/**
+			 * Retrieves the user-specified library collection.
+			 *
+			 * @return library collection
+			 */
+			QString collection() const;
+
+			/**
+			 * Retrieves the user-specified document category.
+			 *
+			 * @return document category
+			 */
+			QString category() const;
+
+			/**
+			 * Retrieves the user-specified document title.
+			 *
+			 * @return document title
+			 */
+			QString title() const;
+
+			/**
+			 * Retrieves the user-specified document tags.
+			 *
+			 * @return document tags
+			 */
+			QString tags() const;
 
 		public slots:
 			/**
@@ -91,11 +127,11 @@ namespace vaultaire
 
 		private:
 			// Meta-data fields
-			QDateEdit* date;
-			QLineEdit* collection;
-			QLineEdit* category;
-			QLineEdit* title;
-			QLineEdit* tags;
+			QDateEdit* dateField;
+			QLineEdit* collectionField;
+			QLineEdit* categoryField;
+			QLineEdit* titleField;
+			QLineEdit* tagsField;
 
 			// Application settings (for library root)
 			QSettings* settings;
