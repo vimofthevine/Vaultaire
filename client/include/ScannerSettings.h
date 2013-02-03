@@ -19,6 +19,7 @@
 
 #include <QWidget>
 
+// Forward declaration(s)
 class QCheckBox;
 class QLineEdit;
 class QPushButton;
@@ -27,8 +28,11 @@ class QTextEdit;
 
 namespace vaultaire
 {
+	// Forward declaration(s)
+	class Settings;
+
 	/**
-	 * Scanner settings panel.
+	 * Scanner settings widget.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
@@ -38,23 +42,64 @@ namespace vaultaire
 
 		public:
 			/**
-			 * Constructs a new scanner settings panel.
+			 * Constructs a scanner settings widget.
 			 *
-			 * @param parent parent widget
+			 * @param settings application settings
+			 * @param parent   parent widget
 			 */
-			ScannerSettings(QWidget* parent = 0);
+			ScannerSettings(Settings* settings, QWidget* parent = 0);
 
 		private slots:
+			/**
+			 * Saves the new device name setting.
+			 *
+			 * @param newDevice new device name value
+			 */
 			void deviceNameChanged(const QString& newDevice);
+
+			/**
+			 * Saves the new scan command setting.
+			 */
 			void scanCommandChanged();
+
+			/**
+			 * Saves the new scanned file suffix setting.
+			 *
+			 * @param newSuffix new file suffix value
+			 */
 			void scanSuffixChanged(const QString& newSuffix);
+
+			/**
+			 * Saves the new perform-conversion setting.
+			 *
+			 * @param doConvert new perform-conversion value
+			 */
 			void doConversionChanged(bool doConvert);
+
+			/**
+			 * Saves the new conversion command setting.
+			 */
 			void convertCommandChanged();
+
+			/**
+			 * Saves the new converted file suffix setting.
+			 *
+			 * @param newSuffix new file suffix value
+			 */
 			void convertSuffixChanged(const QString& newSuffix);
 
+			/**
+			 * Reload setting values if the system-vs-user
+			 * setting has changed.
+			 *
+			 * @param key setting key of the modified setting
+			 */
+			void reload(const QString& key);
+
 		private:
-			/** System-wide settings */
-			QSettings* settings;
+			/** Settings */
+			Settings* settings;
+
 			/** Scanner device */
 			QLineEdit* scannerDevice;
 			/** Scan command */
