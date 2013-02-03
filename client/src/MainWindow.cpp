@@ -26,12 +26,16 @@
 #include "ScannerSettings.h"
 #include "SearchView.h"
 #include "SettingsDialog.h"
+#include "StatusBar.h"
 
 namespace vaultaire
 {
 	/** Constructor */
-	MainWindow::MainWindow()
+	MainWindow::MainWindow() :
+		status(new StatusBar(this))
 	{
+		setStatusBar(status);
+
 		settings = new QSettings(QSettings::SystemScope,
 			qApp->organizationName(), qApp->applicationName(), this);
 
@@ -50,6 +54,16 @@ namespace vaultaire
 		settingsDialog->add(tr("Appearance"), appearanceSettings);
 
 		scanner = new Scanner(settings, this);
+		// Connect signals to show scanning in-progress in status bar
+		connect(scanner, SIGNAL(started()),
+			status, SLOT(startBusyIndicator()));
+		connect(scanner, SIGNAL(started()),
+			this, SLOT(showScanningMessage()));
+		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
+			status, SLOT(stopBusyIndicator()));
+		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
+			status, SLOT(clearMessage()));
+
 		scanView = new ScanView(scanner, this);
 		browser = new LibraryBrowser(this);
 		search = new SearchView(this);
@@ -73,6 +87,12 @@ namespace vaultaire
 		setWindowIcon(QIcon(":/vaultaire.svg"));
 
 		readSettings();
+	}
+
+	//--------------------------------------------------------------------------
+	void MainWindow::showScanningMessage()
+	{
+		status->showMessage(tr("Scanning..."));
 	}
 
 	/** Read settings */
