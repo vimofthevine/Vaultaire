@@ -22,6 +22,9 @@
 namespace vaultaire
 {
 	//--------------------------------------------------------------------------
+	bool Settings::useSystemSettings = false;
+
+	//--------------------------------------------------------------------------
 	Settings::Settings(QObject* parent) : QObject(parent)
 	{
 		systemSettings = new QSettings(QSettings::SystemScope,
