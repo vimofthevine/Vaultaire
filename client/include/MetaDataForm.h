@@ -24,10 +24,12 @@ class QDate;
 class QDateEdit;
 class QFileSystemWatcher;
 class QLineEdit;
-class QSettings;
 
 namespace vaultaire
 {
+	// Forward declaration(s)
+	class Settings;
+
 	/**
 	 * Widget that provides a form allowing users to
 	 * specify or modify document meta-data.
@@ -42,10 +44,9 @@ namespace vaultaire
 			/**
 			 * Constructs a meta-data editing form widget.
 			 *
-			 * @param settings application settings
-			 * @param parent   parent widget
+			 * @param parent parent widget
 			 */
-			MetaDataForm(QSettings* settings, QWidget* parent = 0);
+			MetaDataForm(QWidget* parent = 0);
 
 			/**
 			 * Retrieves the user-specified document date.
@@ -134,7 +135,7 @@ namespace vaultaire
 			QLineEdit* tagsField;
 
 			// Application settings (for library root)
-			QSettings* settings;
+			Settings* settings;
 
 			// File-system watcher
 			QFileSystemWatcher* watcher;

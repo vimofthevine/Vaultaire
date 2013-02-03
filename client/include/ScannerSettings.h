@@ -23,7 +23,6 @@
 class QCheckBox;
 class QLineEdit;
 class QPushButton;
-class QSettings;
 class QTextEdit;
 
 namespace vaultaire

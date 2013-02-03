@@ -22,7 +22,6 @@
 
 // Forward declaration(s)
 class QListWidget;
-class QSettings;
 
 namespace vaultaire
 {
@@ -31,6 +30,7 @@ namespace vaultaire
 	class LibraryEntry;
 	class SearchEngine;
 	class SearchForm;
+	class Settings;
 
 	/**
 	 * Widget that encompasses everything required for a library search
@@ -76,7 +76,7 @@ namespace vaultaire
 
 		private:
 			// Application settings
-			QSettings* settings;
+			Settings* settings;
 			// Search engine
 			SearchEngine* engine;
 			// Search-parameters form widget

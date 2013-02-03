@@ -18,12 +18,13 @@
 
 #include "MetaDataForm.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
 	//--------------------------------------------------------------------------
-	MetaDataForm::MetaDataForm(QSettings* settings, QWidget* parent)
-		: QWidget(parent), settings(settings)
+	MetaDataForm::MetaDataForm(QWidget* parent)
+		: QWidget(parent), settings(new Settings(this))
 	{
 		createFields();
 		updateCollectionAutoCompletion();

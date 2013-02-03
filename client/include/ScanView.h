@@ -23,7 +23,6 @@
 
 // Forward declaration(s)
 class QPushButton;
-class QSettings;
 
 namespace vaultaire
 {
@@ -110,8 +109,6 @@ namespace vaultaire
 			QPushButton* rejectScanButton;
 			QPushButton* resetButton;
 
-			// Application settings
-			QSettings* settings;
 			// Scanner device
 			Scanner* scanner;
 			// Document library
