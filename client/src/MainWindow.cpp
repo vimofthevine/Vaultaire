@@ -24,14 +24,19 @@
 #include "OcrSettings.h"
 #include "ScanView.h"
 #include "ScannerSettings.h"
+#include "SearchEngine.h"
 #include "SearchView.h"
 #include "SettingsDialog.h"
+#include "StatusBar.h"
 
 namespace vaultaire
 {
 	/** Constructor */
-	MainWindow::MainWindow()
+	MainWindow::MainWindow() :
+		status(new StatusBar(this))
 	{
+		setStatusBar(status);
+
 		settings = new QSettings(QSettings::SystemScope,
 			qApp->organizationName(), qApp->applicationName(), this);
 
@@ -50,9 +55,26 @@ namespace vaultaire
 		settingsDialog->add(tr("Appearance"), appearanceSettings);
 
 		scanner = new Scanner(settings, this);
+		// Connect signals to show scanning in-progress in status bar
+		connect(scanner, SIGNAL(started()),
+			status, SLOT(startBusyIndicator()));
+		connect(scanner, SIGNAL(started()),
+			this, SLOT(showScanningMessage()));
+		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
+			status, SLOT(stopBusyIndicator()));
+		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
+			status, SLOT(clearMessage()));
+
+		engine = new SearchEngine(settings, this);
+		// Connect signals to show search in-progress in status bar
+		connect(engine, SIGNAL(started()),
+			status, SLOT(startBusyIndicator()));
+		connect(engine, SIGNAL(finished(QStringList)),
+			status, SLOT(stopBusyIndicator()));
+
 		scanView = new ScanView(scanner, this);
 		browser = new LibraryBrowser(this);
-		search = new SearchView(this);
+		search = new SearchView(engine, this);
 
 		stack = new QStackedWidget(this);
 		stack->addWidget(scanView);
@@ -73,6 +95,12 @@ namespace vaultaire
 		setWindowIcon(QIcon(":/vaultaire.svg"));
 
 		readSettings();
+	}
+
+	//--------------------------------------------------------------------------
+	void MainWindow::showScanningMessage()
+	{
+		status->showMessage(tr("Scanning..."));
 	}
 
 	/** Read settings */

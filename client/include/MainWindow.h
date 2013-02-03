@@ -30,8 +30,10 @@ namespace vaultaire
 	class MainMenu;
 	class Scanner;
 	class ScanView;
+	class SearchEngine;
 	class SearchView;
 	class SettingsDialog;
+	class StatusBar;
 
 	/**
 	 * The application's main, primary window.
@@ -53,6 +55,7 @@ namespace vaultaire
 			void showFileBrowser();
 			void showSearchForm();
 			void about();
+			void showScanningMessage();
 
 		private:
 			void writeSettings();
@@ -60,7 +63,9 @@ namespace vaultaire
 
 			QSettings* settings;
 			Scanner* scanner;
+			SearchEngine* engine;
 			MainMenu* mainMenu;
+			StatusBar* status;
 			SettingsDialog* settingsDialog;
 			QStackedWidget* stack;
 			ScanView* scanView;

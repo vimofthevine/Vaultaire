@@ -20,48 +20,79 @@
 #include <QList>
 #include <QSplitter>
 
-// Forward declarations
+// Forward declaration(s)
 class QListWidget;
 class QSettings;
 
 namespace vaultaire
 {
-	// Forward declarations
+	// Forward declaration(s)
 	class ImageViewer;
 	class LibraryEntry;
 	class SearchEngine;
 	class SearchForm;
 
+	/**
+	 * Widget that encompasses everything required for a library search
+	 * operation, including the meta-data form, result list, and image
+	 * viewer.
+	 *
+	 * @author Kyle Treubig <kyle@vimofthevine.com>
+	 */
 	class SearchView : public QSplitter
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a new search view.
+			 * Constructs a search view widget.
 			 *
+			 * @param engine search engine
 			 * @param parent parent widget
 			 */
-			SearchView(QWidget* parent = 0);
+			SearchView(SearchEngine* engine, QWidget* parent = 0);
 
 			/**
-			 * Destructor
+			 * Free up memory for any search results.
 			 */
-			virtual ~SearchView();
+			~SearchView();
 
 		private slots:
+			/**
+			 * Once search has finished, update results list with
+			 * found results.
+			 *
+			 * @param results search results
+			 */
 			void searchFinished(const QStringList& results);
+
+			/**
+			 * Displays the image selected from the search results
+			 * list.
+			 *
+			 * @param row row index of the selected entry
+			 */
 			void resultSelected(int row);
 
 		private:
-			void deleteFoundEntries();
-
+			// Application settings
 			QSettings* settings;
+			// Search engine
 			SearchEngine* engine;
+			// Search-parameters form widget
 			SearchForm* form;
-			ImageViewer* viewer;
+			// Search results list widget
 			QListWidget* resultList;
+			// Image viewer widget
+			ImageViewer* viewer;
+
+			// Search results list
 			QList<LibraryEntry*> libEntries;
+
+			/**
+			 * Clears all result entries from the results list.
+			 */
+			void deleteFoundEntries();
 	};
 
 }
