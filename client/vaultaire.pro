@@ -10,6 +10,7 @@ TARGET = vaultaire
 TEMPLATE = app
 
 SOURCES += src/main.cpp \
+           src/Settings.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
            src/StatusBar.cpp \
@@ -30,7 +31,8 @@ SOURCES += src/main.cpp \
            src/AppearanceSettings.cpp \
            src/SettingsDialog.cpp
 
-HEADERS  += include/MainWindow.h \
+HEADERS  += include/Settings.h \
+            include/MainWindow.h \
             include/MainMenu.h \
             include/StatusBar.h \
             include/MetaDataForm.h \
