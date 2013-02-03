@@ -38,11 +38,6 @@ namespace vaultaire
 		connect(iconTheme, SIGNAL(textEdited(QString)),
 			this, SLOT(iconThemeChanged(QString)));
 
-		if ( ! currentIconTheme.isEmpty())
-		{
-			QIcon::setThemeName(currentIconTheme);
-		}
-
 		// Create form
 		QFormLayout* form = new QFormLayout;
 		setLayout(form);
@@ -56,6 +51,11 @@ namespace vaultaire
 	void AppearanceSettings::iconThemeChanged(const QString& newTheme)
 	{
 		settings->setValue(ICON_THEME_KEY, newTheme);
+
+		if ( ! newTheme.isEmpty())
+		{
+			QIcon::setThemeName(newTheme);
+		}
 	}
 
 }
