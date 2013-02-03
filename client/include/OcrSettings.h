@@ -21,7 +21,6 @@
 
 // Forward declaration(s)
 class QCheckBox;
-class QSettings;
 class QTextEdit;
 
 namespace vaultaire

@@ -36,16 +36,24 @@ namespace vaultaire
 	QVariant Settings::value(const QString& key,
 		const QVariant& defaultValue) const
 	{
+		QVariant value;
+
 		if (useSystemSettings && key != SYSTEM_SETTINGS_KEY)
 		{
-			return systemSettings->value(key, defaultValue);
+			qDebug() << "Using system settings: " << key << " " << defaultValue;
+			value = systemSettings->value(key, defaultValue);
 		}
 		else
 		{
+			qDebug() << "Using user settings: " << key << " " << defaultValue;
 			// Use system value as the default if no user value set
 			QVariant systemValue = systemSettings->value(key, defaultValue);
-			return userSettings->value(key, systemValue);
+			qDebug() << "  default value: " << systemValue;
+			value = userSettings->value(key, systemValue);
 		}
+
+		qDebug() << "Returning " << value;
+		return value;
 	}
 
 	//--------------------------------------------------------------------------

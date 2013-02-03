@@ -16,45 +16,35 @@
 
 #include <QtGui>
 
-#include "AppearanceSettings.h"
 #include "LibraryBrowser.h"
-#include "LibrarySettings.h"
 #include "MainMenu.h"
 #include "MainWindow.h"
-#include "OcrSettings.h"
 #include "ScanView.h"
-#include "ScannerSettings.h"
 #include "SearchEngine.h"
 #include "SearchView.h"
+#include "Settings.h"
 #include "SettingsDialog.h"
 #include "StatusBar.h"
 
 namespace vaultaire
 {
-	/** Constructor */
+	//--------------------------------------------------------------------------
 	MainWindow::MainWindow() :
-		status(new StatusBar(this))
+		settings(new Settings(this)),
+		scanner(new Scanner(this)),
+		engine(new SearchEngine(this)),
+		mainMenu(new MainMenu(this)),
+		status(new StatusBar(this)),
+		stack(new QStackedWidget(this)),
+		settingsDialog(new SettingsDialog(this))
 	{
+		// Set up window widgets
+		setWindowTitle(tr("Vaultaire"));
+		setWindowIcon(QIcon(":/vaultaire.svg"));
+		setMenuBar(mainMenu);
 		setStatusBar(status);
+		setCentralWidget(stack);
 
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
-
-		settingsDialog = new SettingsDialog(this);
-
-		LibrarySettings* libSettings = new LibrarySettings;
-		settingsDialog->add(tr("Library"), libSettings);
-
-		ScannerSettings* scannerSettings = new ScannerSettings;
-		settingsDialog->add(tr("Scanner"), scannerSettings);
-
-		OcrSettings* ocrSettings = new OcrSettings;
-		settingsDialog->add(tr("OCR"), ocrSettings);
-
-		AppearanceSettings* appearanceSettings = new AppearanceSettings;
-		settingsDialog->add(tr("Appearance"), appearanceSettings);
-
-		scanner = new Scanner(settings, this);
 		// Connect signals to show scanning in-progress in status bar
 		connect(scanner, SIGNAL(started()),
 			status, SLOT(startBusyIndicator()));
@@ -65,34 +55,27 @@ namespace vaultaire
 		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
 			status, SLOT(clearMessage()));
 
-		engine = new SearchEngine(settings, this);
 		// Connect signals to show search in-progress in status bar
 		connect(engine, SIGNAL(started()),
 			status, SLOT(startBusyIndicator()));
 		connect(engine, SIGNAL(finished(QStringList)),
 			status, SLOT(stopBusyIndicator()));
 
+		// Create application widgets
 		scanView = new ScanView(scanner, this);
 		browser = new LibraryBrowser(this);
 		search = new SearchView(engine, this);
-
-		stack = new QStackedWidget(this);
 		stack->addWidget(scanView);
 		stack->addWidget(browser);
 		stack->addWidget(search);
 
-		mainMenu = new MainMenu(this);
-		setMenuBar(mainMenu);
+		// Connect menu signals
 		connect(mainMenu, SIGNAL(scanNewFile()), this, SLOT(showScanForm()));
 		connect(mainMenu, SIGNAL(browseFiles()), this, SLOT(showFileBrowser()));
 		connect(mainMenu, SIGNAL(findFile()), this, SLOT(showSearchForm()));
 		connect(mainMenu, SIGNAL(showAboutInfo()), this, SLOT(about()));
 		connect(mainMenu, SIGNAL(quit()), this, SLOT(close()));
 		connect(mainMenu, SIGNAL(editSettings()), settingsDialog, SLOT(show()));
-
-		setWindowTitle(tr("Vaultaire"));
-		setCentralWidget(stack);
-		setWindowIcon(QIcon(":/vaultaire.svg"));
 
 		readSettings();
 	}
@@ -103,27 +86,25 @@ namespace vaultaire
 		status->showMessage(tr("Scanning..."));
 	}
 
-	/** Read settings */
+	//--------------------------------------------------------------------------
 	void MainWindow::readSettings()
 	{
-		QSettings settings(qApp->organizationName(),
-			qApp->applicationName());
+		QSettings settings;
 		QSize size = settings.value("MainWindowSize", QSize(600, 500)).toSize();
 		QByteArray state = settings.value("MainWindowState", QByteArray()).toByteArray();
 		restoreState(state);
 		resize(size);
 	}
 
-	/** Write settings */
+	//--------------------------------------------------------------------------
 	void MainWindow::writeSettings()
 	{
-		QSettings settings(qApp->organizationName(),
-			qApp->applicationName());
+		QSettings settings;
 		settings.setValue("MainWindowSize", size());
 		settings.setValue("MainWindowState", saveState());
 	}
 
-	/** Close event */
+	//--------------------------------------------------------------------------
 	void MainWindow::closeEvent(QCloseEvent* event)
 	{
 		int result = QMessageBox::warning(this, tr("Close?"),
@@ -140,25 +121,25 @@ namespace vaultaire
 		}
 	}
 
-	/** Scan form */
+	//--------------------------------------------------------------------------
 	void MainWindow::showScanForm()
 	{
 		stack->setCurrentWidget(scanView);
 	}
 
-	/** File browser */
+	//--------------------------------------------------------------------------
 	void MainWindow::showFileBrowser()
 	{
 		stack->setCurrentWidget(browser);
 	}
 
-	/** Search form */
+	//--------------------------------------------------------------------------
 	void MainWindow::showSearchForm()
 	{
 		stack->setCurrentWidget(search);
 	}
 
-	/** About */
+	//--------------------------------------------------------------------------
 	void MainWindow::about()
 	{
 		QMessageBox::about(this, tr("About"),

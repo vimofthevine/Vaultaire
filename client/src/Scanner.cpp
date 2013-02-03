@@ -18,14 +18,16 @@
 
 #include "Scanner.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
-	/** Constructor */
-	Scanner::Scanner(QSettings* settings, QObject* parent) :
-		QObject(parent), settings(settings)
+	//--------------------------------------------------------------------------
+	Scanner::Scanner(QObject* parent) :
+		QObject(parent),
+		settings(new Settings(this)),
+		process(new QProcess(this))
 	{
-		process = new QProcess(this);
 		connect(process, SIGNAL(error(QProcess::ProcessError)),
 			this, SLOT(error(QProcess::ProcessError)));
 		connect(process, SIGNAL(finished(int, QProcess::ExitStatus)),
@@ -33,7 +35,7 @@ namespace vaultaire
 		connect(process, SIGNAL(started()), this, SIGNAL(started()));
 	}
 
-	/** Scan */
+	//--------------------------------------------------------------------------
 	void Scanner::scan(const QString& filename)
 	{
 		// Only one scan at a time
@@ -56,13 +58,13 @@ namespace vaultaire
 		}
 	}
 
-	/** Is-scanning */
+	//--------------------------------------------------------------------------
 	bool Scanner::isScanning() const
 	{
 		return (process->state() != QProcess::NotRunning);
 	}
 
-	/** Cancel */
+	//--------------------------------------------------------------------------
 	void Scanner::cancel()
 	{
 		if (isScanning())
@@ -72,7 +74,7 @@ namespace vaultaire
 		}
 	}
 
-	/** Finished slot */
+	//--------------------------------------------------------------------------
 	void Scanner::finished(int exitCode, QProcess::ExitStatus exitStatus)
 	{
 		if (exitStatus == QProcess::NormalExit)
@@ -102,7 +104,7 @@ namespace vaultaire
 		}
 	}
 
-	/** Error slot */
+	//--------------------------------------------------------------------------
 	void Scanner::error(QProcess::ProcessError error)
 	{
 		qDebug() << "Scan process error: " << error;

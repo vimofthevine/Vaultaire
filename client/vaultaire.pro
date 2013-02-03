@@ -25,6 +25,7 @@ SOURCES += src/main.cpp \
            src/Scanner.cpp \
            src/Library.cpp \
            src/SearchEngine.cpp \
+           src/GeneralSettings.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
            src/OcrSettings.cpp \
@@ -46,6 +47,7 @@ HEADERS  += include/Settings.h \
             include/Scanner.h \
             include/Library.h \
             include/SearchEngine.h \
+            include/GeneralSettings.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
             include/OcrSettings.h \

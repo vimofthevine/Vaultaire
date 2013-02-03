@@ -95,6 +95,9 @@ namespace vaultaire
 		form->addRow(tr("Convert Scanned File?"), doConversion);
 		form->addRow(tr("Conversion Command"), convertCommand);
 		form->addRow(tr("Converted File Extension"), convertedSuffix);
+
+		// Initialize field
+		reload(SYSTEM_SETTINGS_KEY);
 	}
 
 	//--------------------------------------------------------------------------

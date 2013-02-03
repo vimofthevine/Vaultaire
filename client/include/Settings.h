@@ -85,7 +85,7 @@ namespace vaultaire
 
 		private:
 			// Flag indicating whether using system-wide or user-specific
-			bool useSystemSettings;
+			static bool useSystemSettings;
 
 			// System-wide settings
 			QSettings* systemSettings;
