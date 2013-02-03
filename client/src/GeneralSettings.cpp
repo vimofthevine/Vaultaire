@@ -44,5 +44,8 @@ namespace vaultaire
 	void GeneralSettings::useSystemChanged(bool useSystem)
 	{
 		settings->setValue(SYSTEM_SETTINGS_KEY, useSystem);
+
+		QMessageBox::information(this, tr("Settings Change"),
+			tr("Some settings may not take affect until restarted"));
 	}
 }
