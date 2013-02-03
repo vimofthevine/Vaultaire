@@ -17,13 +17,14 @@
 #include <QtCore>
 
 #include "SearchEngine.h"
+#include "Settings.h"
 #include "SettingKeys.h"
 
 namespace vaultaire
 {
-	/** Constructor */
-	SearchEngine::SearchEngine(QSettings* settings, QObject* parent) :
-		QObject(parent), settings(settings)
+	//--------------------------------------------------------------------------
+	SearchEngine::SearchEngine(QObject* parent) :
+		QObject(parent), settings(new Settings(this))
 	{
 		process = new QProcess(this);
 		connect(process, SIGNAL(error(QProcess::ProcessError)),
@@ -33,7 +34,7 @@ namespace vaultaire
 		connect(process, SIGNAL(started()), this, SIGNAL(started()));
 	}
 
-	/** Search */
+	//--------------------------------------------------------------------------
 	void SearchEngine::search(int year, int month, int date,
 		const QString& collection, const QString& field,
 		const QString& parameter, bool insensitive)
@@ -96,13 +97,13 @@ namespace vaultaire
 		process->start("find", args);
 	}
 
-	/** Is-searching */
+	//--------------------------------------------------------------------------
 	bool SearchEngine::isSearching() const
 	{
 		return (process->state() != QProcess::NotRunning);
 	}
 
-	/** Cancel */
+	//--------------------------------------------------------------------------
 	void SearchEngine::cancel()
 	{
 		if (isSearching())
@@ -112,7 +113,7 @@ namespace vaultaire
 		}
 	}
 
-	/** Finished slot */
+	//--------------------------------------------------------------------------
 	void SearchEngine::finished(int exitCode, QProcess::ExitStatus exitStatus)
 	{
 		if (exitStatus == QProcess::NormalExit)
@@ -133,7 +134,7 @@ namespace vaultaire
 		}
 	}
 
-	/** Error slot */
+	//--------------------------------------------------------------------------
 	void SearchEngine::error(QProcess::ProcessError error)
 	{
 		qDebug() << "Search process error: " << error;

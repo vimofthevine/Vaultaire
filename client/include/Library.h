@@ -19,11 +19,16 @@
 
 #include <QtCore>
 
-// Forward declaration
-class QSettings;
-
 namespace vaultaire
 {
+	// Forward declaration
+	class Settings;
+
+	/**
+	 * Model of the document library.
+	 *
+	 * @author Kyle Treubig <kyle@vimofthevine.com>
+	 */
 	class Library : QObject
 	{
 		Q_OBJECT
@@ -63,14 +68,48 @@ namespace vaultaire
 			static QString sanitize(const QString& orig);
 
 		private:
+			// Settings
+			Settings* settings;
+			// External process
+			QProcess* process;
+
+			/**
+			 * Copies the source file to the destination location. If
+			 * configured to perform conversion, the file is converted
+			 * using the configured conversion command.
+			 *
+			 * @param src  source image file
+			 * @param dest destination image file
+			 */
 			bool copyOrConvert(const QString& src, const QString& dest);
+
+			/**
+			 * Extracts the contents from the given file to the destination
+			 * text file, if optical character recognition is configured.
+			 *
+			 * @param src  source image file
+			 * @param dest destination text file
+			 */
 			bool extractOcr(const QString& src, const QString& dest);
+
+			/**
+			 * Creates a meta-data file to hold the given meta information.
+			 *
+			 * @param filename image file name
+			 * @param date     document date
+			 * @param category document category
+			 * @param tile     document title
+			 * @param tags     document tags
+			 */
 			bool createMetaFile(const QString& filename, const QDate& date,
 				const QString& category, const QString& title, const QString& tags);
-			bool exec(const QString& command);
 
-			QSettings* settings;
-			QProcess* process;
+			/**
+			 * Execute the given command as an external process.
+			 *
+			 * @param command external command
+			 */
+			bool exec(const QString& command);
 	};
 }
 

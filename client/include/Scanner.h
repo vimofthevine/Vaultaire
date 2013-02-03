@@ -20,11 +20,11 @@
 #include <QObject>
 #include <QProcess>
 
-// Forward declarations
-class QSettings;
-
 namespace vaultaire
 {
+	// Forward declaration(s)
+	class Settings;
+
 	/**
 	 * Model to represent a scanner device.
 	 *
@@ -48,10 +48,9 @@ namespace vaultaire
 			/**
 			 * Constructs a new scanner model.
 			 *
-			 * @param settings application settings
-			 * @param parent   parent object
+			 * @param parent parent object
 			 */
-			Scanner(QSettings* settings, QObject* parent = 0);
+			Scanner(QObject* parent = 0);
 
 			/**
 			 * Performs a scan to the specified output file.
@@ -75,7 +74,19 @@ namespace vaultaire
 			void cancel();
 
 		private slots:
+			/**
+			 * Handles the result of the scan operation.
+			 *
+			 * @param exitCode   search process exit code
+			 * @param exitStatus search process exit status
+			 */
 			void finished(int exitCode, QProcess::ExitStatus exitStatus);
+
+			/**
+			 * Handles an error that occured while scanning.
+			 *
+			 * @param error scan process error type
+			 */
 			void error(QProcess::ProcessError error);
 
 		signals:
@@ -92,7 +103,9 @@ namespace vaultaire
 			void finished(Scanner::ScanResult result);
 
 		private:
-			QSettings* settings;
+			// Settings
+			Settings* settings;
+			// External process
 			QProcess* process;
 	};
 }

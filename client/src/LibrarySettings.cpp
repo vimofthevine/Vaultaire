@@ -18,24 +18,22 @@
 
 #include "LibrarySettings.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
+	// Field help text(s)
 	static const QString& LIB_ROOT_HELP = "Root directory in which all library documents are found";
 
-	/** Constructor */
-	LibrarySettings::LibrarySettings(QWidget* parent)
-		: QWidget(parent)
+	//--------------------------------------------------------------------------
+	LibrarySettings::LibrarySettings(Settings* settings, QWidget* parent) :
+		QWidget(parent), settings(settings)
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			QApplication::organizationName(),
-			QApplication::applicationName(),
-			this);
+		connect(settings, SIGNAL(settingModified(QString)),
+			this, SLOT(reload(QString)));
 
 		// Library root directory field
-		QString currentLibRoot = settings->value(LIB_ROOT_KEY,
-			DEFAULT_LIB_ROOT).toString();
-		libRoot = new QLineEdit(currentLibRoot, this);
+		libRoot = new QLineEdit(this);
 		libRoot->setToolTip(LIB_ROOT_HELP);
 		connect(libRoot, SIGNAL(textEdited(QString)),
 			this, SLOT(libRootChanged(QString)));
@@ -45,16 +43,29 @@ namespace vaultaire
 		setLayout(form);
 		form->addRow(tr("Library Root"), libRoot);
 
-		// Disable fields if not writable (i.e., no permission
-		// to modify system-level settings
-		libRoot->setEnabled(settings->isWritable());
+		// Initialize field
+		reload(SYSTEM_SETTINGS_KEY);
 	}
 
-	/** Store change to library root directory */
+	//--------------------------------------------------------------------------
 	void LibrarySettings::libRootChanged(const QString& newLibRoot)
 	{
 		settings->setValue(LIB_ROOT_KEY, newLibRoot);
 	}
 
+	//--------------------------------------------------------------------------
+	void LibrarySettings::reload(const QString& key)
+	{
+		if (key == SYSTEM_SETTINGS_KEY)
+		{
+			QString currentLibRoot = settings->value(LIB_ROOT_KEY,
+				DEFAULT_LIB_ROOT).toString();
+			libRoot->setText(currentLibRoot);
+
+			// Disable fields if not writable (i.e., no permission
+			// to modify system-level settings
+			libRoot->setEnabled(settings->isWritable());
+		}
+	}
 }
 

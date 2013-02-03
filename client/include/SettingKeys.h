@@ -19,6 +19,9 @@
 
 namespace vaultaire
 {
+	// System or user settings
+	static const QString SYSTEM_SETTINGS_KEY = "UseSystemWideSettings";
+
 	// Document library root
 	static const QString LIB_ROOT_KEY = "LibraryRootDirectory";
 	static const QString DEFAULT_LIB_ROOT = "/tmp";

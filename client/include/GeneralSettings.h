@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef GENERALSETTINGS_H
+#define GENERALSETTINGS_H
 
-#include <QDialog>
+#include <QWidget>
 
 // Forward declaration(s)
-class QListWidget;
-class QStackedWidget;
+class QCheckBox;
 
 namespace vaultaire
 {
@@ -29,43 +28,38 @@ namespace vaultaire
 	class Settings;
 
 	/**
-	 * Application settings and preferences dialog.
+	 * General settings widget.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
-	class SettingsDialog : public QDialog
+	class GeneralSettings : public QWidget
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a settings dialog.
-			 */
-			SettingsDialog(QWidget* parent = 0);
-
-			/**
-			 * Adds a new settings page to the
-			 * settings dialog.
+			 * Constructs a general settings widget.
 			 *
-			 * @param label settings category label
-			 * @param page  settings widget
+			 * @param settings application settings
+			 * @param parent   parent widget
 			 */
-			void add(const QString& label, QWidget* page);
+			GeneralSettings(Settings* settings, QWidget* parent = 0);
+
+		private slots:
+			/**
+			 * Saves the system-vs-user settings option.
+			 *
+			 * @param useSystem new system-vs-user value
+			 */
+			void useSystemChanged(bool useSystem);
 
 		private:
-			// Application settings
+			// Settings
 			Settings* settings;
 
-			// Setting categories list widget
-			QListWidget* selection;
-			// Widget stack
-			QStackedWidget* pages;
-
-			/**
-			 * Create default settings categories.
-			 */
-			void createPages();
+			// Use system-wide settings field
+			QCheckBox* useSystemSettings;
 	};
 }
 
-#endif
+#endif // GENERALSETTINGS_H

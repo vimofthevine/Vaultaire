@@ -19,15 +19,17 @@
 
 #include <QWidget>
 
-// Forward declarations
+// Forward declaration(s)
 class QCheckBox;
-class QSettings;
 class QTextEdit;
 
 namespace vaultaire
 {
+	// Forward declaration(s)
+	class Settings;
+
 	/**
-	 * OCR settings panel.
+	 * OCR settings widget.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
@@ -37,19 +39,41 @@ namespace vaultaire
 
 		public:
 			/**
-			 * Constructs a new OCR settings panel.
+			 * Constructs a OCR settings widget.
 			 *
-			 * @param parent parent widget
+			 * @param settings application settings
+			 * @param parent   parent widget
 			 */
-			OcrSettings(QWidget* parent = 0);
+			OcrSettings(Settings* settings, QWidget* parent = 0);
 
 		private slots:
+			/**
+			 * Saves the new perform-OCR setting.
+			 *
+			 * @param doOcr new perform-OCR value
+			 */
 			void doOcrChanged(bool doOcr);
+
+			/**
+			 * Saves the new OCR command setting.
+			 */
 			void ocrCommandChanged();
 
+			/**
+			 * Reload setting values if the system-vs-user
+			 * setting has changed.
+			 *
+			 * @param key setting key of the modified setting
+			 */
+			void reload(const QString& key);
+
 		private:
-			QSettings* settings;
+			// Settings
+			Settings* settings;
+
+			// Perform-OCR field
 			QCheckBox* doOcr;
+			// OCR command field
 			QTextEdit* ocrCommand;
 	};
 }

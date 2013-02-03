@@ -22,16 +22,16 @@
 #include "SearchForm.h"
 #include "SearchView.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
 	//--------------------------------------------------------------------------
 	SearchView::SearchView(SearchEngine* engine, QWidget* parent) :
-		QSplitter(parent), engine(engine)
+		QSplitter(parent),
+		settings(new Settings(this)),
+		engine(engine)
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
-
 		form = new SearchForm(engine, this);
 		resultList = new QListWidget(this);
 		viewer = new ImageViewer(this);

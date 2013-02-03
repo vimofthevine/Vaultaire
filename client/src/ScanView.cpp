@@ -27,13 +27,13 @@ namespace vaultaire
 {
 	//--------------------------------------------------------------------------
 	ScanView::ScanView(Scanner* scanner, QWidget* parent) :
-		QSplitter(parent), scanner(scanner), library(new Library(this)),
+		QSplitter(parent),
+		scanner(scanner),
+		library(new Library(this)),
+		metaForm(new MetaDataForm(this)),
 		imageViewer(new ImageViewer(this))
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
-		metaForm = new MetaDataForm(settings, this);
-
+		// Connect signals for scan progress
 		connect(scanner, SIGNAL(started()), this, SLOT(scanStarted()));
 		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
 			this, SLOT(scanFinished(Scanner::ScanResult)));
@@ -46,6 +46,7 @@ namespace vaultaire
 		buttonsLayout->addWidget(rejectScanButton);
 		buttonsLayout->addWidget(resetButton);
 
+		// Connect signals for form states
 		connect(metaForm, SIGNAL(isEmpty(bool)), this, SLOT(formIsEmpty(bool)));
 		connect(metaForm, SIGNAL(isValid(bool)),
 			scanPreviewButton, SLOT(setEnabled(bool)));

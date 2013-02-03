@@ -10,6 +10,7 @@ TARGET = vaultaire
 TEMPLATE = app
 
 SOURCES += src/main.cpp \
+           src/Settings.cpp \
            src/MainWindow.cpp \
            src/MainMenu.cpp \
            src/StatusBar.cpp \
@@ -24,13 +25,15 @@ SOURCES += src/main.cpp \
            src/Scanner.cpp \
            src/Library.cpp \
            src/SearchEngine.cpp \
+           src/GeneralSettings.cpp \
            src/LibrarySettings.cpp \
            src/ScannerSettings.cpp \
            src/OcrSettings.cpp \
            src/AppearanceSettings.cpp \
            src/SettingsDialog.cpp
 
-HEADERS  += include/MainWindow.h \
+HEADERS  += include/Settings.h \
+            include/MainWindow.h \
             include/MainMenu.h \
             include/StatusBar.h \
             include/MetaDataForm.h \
@@ -44,6 +47,7 @@ HEADERS  += include/MainWindow.h \
             include/Scanner.h \
             include/Library.h \
             include/SearchEngine.h \
+            include/GeneralSettings.h \
             include/LibrarySettings.h \
             include/ScannerSettings.h \
             include/OcrSettings.h \
