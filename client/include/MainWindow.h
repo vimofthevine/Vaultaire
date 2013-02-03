@@ -30,6 +30,7 @@ namespace vaultaire
 	class MainMenu;
 	class Scanner;
 	class ScanView;
+	class SearchEngine;
 	class SearchView;
 	class SettingsDialog;
 	class StatusBar;
@@ -62,6 +63,7 @@ namespace vaultaire
 
 			QSettings* settings;
 			Scanner* scanner;
+			SearchEngine* engine;
 			MainMenu* mainMenu;
 			StatusBar* status;
 			SettingsDialog* settingsDialog;

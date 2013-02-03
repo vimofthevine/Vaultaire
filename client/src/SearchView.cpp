@@ -26,12 +26,12 @@
 namespace vaultaire
 {
 	//--------------------------------------------------------------------------
-	SearchView::SearchView(QWidget* parent) : QSplitter(parent)
+	SearchView::SearchView(SearchEngine* engine, QWidget* parent) :
+		QSplitter(parent), engine(engine)
 	{
 		settings = new QSettings(QSettings::SystemScope,
 			qApp->organizationName(), qApp->applicationName(), this);
 
-		engine = new SearchEngine(settings, this);
 		form = new SearchForm(engine, this);
 		resultList = new QListWidget(this);
 		viewer = new ImageViewer(this);

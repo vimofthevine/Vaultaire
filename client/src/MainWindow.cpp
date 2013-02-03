@@ -24,6 +24,7 @@
 #include "OcrSettings.h"
 #include "ScanView.h"
 #include "ScannerSettings.h"
+#include "SearchEngine.h"
 #include "SearchView.h"
 #include "SettingsDialog.h"
 #include "StatusBar.h"
@@ -64,9 +65,16 @@ namespace vaultaire
 		connect(scanner, SIGNAL(finished(Scanner::ScanResult)),
 			status, SLOT(clearMessage()));
 
+		engine = new SearchEngine(settings, this);
+		// Connect signals to show search in-progress in status bar
+		connect(engine, SIGNAL(started()),
+			status, SLOT(startBusyIndicator()));
+		connect(engine, SIGNAL(finished(QStringList)),
+			status, SLOT(stopBusyIndicator()));
+
 		scanView = new ScanView(scanner, this);
 		browser = new LibraryBrowser(this);
-		search = new SearchView(this);
+		search = new SearchView(engine, this);
 
 		stack = new QStackedWidget(this);
 		stack->addWidget(scanView);
