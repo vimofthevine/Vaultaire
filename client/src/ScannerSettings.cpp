@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "ScannerSettings.h"
 #include "SettingKeys.h"

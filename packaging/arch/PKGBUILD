@@ -8,9 +8,10 @@ pkgdesc="Document scanning and tagging front-end built on Qt/C++"
 arch=('any')
 url=('http://vaultaire.vimofthevine.com')
 license=('Apache')
-depends=('qt')
+depends=('qt4')
 makedepends=('git' 'make')
 optdepends=('sane: scanner support'
+            'qt5-imageformats: additional image format support'
             'gocr: optical character recognition'
             'tesseract: optical character recognition')
 

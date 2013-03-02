@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "ImageViewer.h"
 #include "Library.h"
