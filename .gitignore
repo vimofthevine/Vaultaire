@@ -6,3 +6,8 @@ obj/
 Makefile
 *.o
 *.swp
+
+# Arch PKGBUILD output
+packaging/arch/*.tar.gz
+packaging/arch/pkg/*
+packaging/arch/src/*
