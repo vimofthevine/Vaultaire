@@ -2,15 +2,16 @@
 # Maintainer: Kyle Treubig <kyle [at] vimofthevine [dot] com>
 
 pkgname=vaultaire-git
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 pkgdesc="Document scanning and tagging front-end built on Qt/C++"
 arch=('any')
 url=('http://vaultaire.vimofthevine.com')
 license=('Apache')
-depends=('qt')
+depends=('qt5-base')
 makedepends=('git' 'make')
 optdepends=('sane: scanner support'
+            'qt5-imageformats: additional image format support'
             'gocr: optical character recognition'
             'tesseract: optical character recognition')
 
@@ -25,7 +26,7 @@ build() {
 		cd $_gitname && git pull origin
 		msg "The local files have been updated"
 	else
-		git clone $_gitroot $_gitname
+		git clone --depth 1 $_gitroot $_gitname
 	fi
 
 	msg "Git checkout done or server timeout"

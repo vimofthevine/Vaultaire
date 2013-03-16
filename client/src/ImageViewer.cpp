@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "ImageViewer.h"
 
@@ -45,6 +45,7 @@ namespace vaultaire
 	/** Open */
 	void ImageViewer::open(QString filename)
 	{
+		qDebug() << "Opening " << filename;
 		if ( ! filename.isEmpty())
 		{
 			QImage image(filename);
@@ -65,11 +66,13 @@ namespace vaultaire
 			}
 			else
 			{
+				qDebug() << "Unable to create image file";
 				clear();
 			}
 		}
 		else
 		{
+			qDebug() << "emptpy file given, clearing";
 			clear();
 		}
 	}

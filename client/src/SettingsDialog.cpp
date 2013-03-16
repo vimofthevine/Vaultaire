@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "AppearanceSettings.h"
 #include "GeneralSettings.h"
