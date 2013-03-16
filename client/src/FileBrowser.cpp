@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "FileBrowser.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
 	/** Constructor */
 	FileBrowser::FileBrowser(QWidget* parent) : QTableView(parent)
 	{
-		QSettings settings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
+		Settings settings;
 		libRoot = settings.value(LIB_ROOT_KEY, DEFAULT_LIB_ROOT).toString();
 
 		fsModel = new QFileSystemModel(this);
@@ -37,8 +37,8 @@ namespace vaultaire
 		setSortingEnabled(true);
 
 		setModel(fsModel);
-		horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
-		horizontalHeader()->setResizeMode(3, QHeaderView::ResizeToContents);
+		horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+		horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
 		verticalHeader()->setVisible(false);
 		setRootIndex(fsModel->setRootPath(libRoot));
 

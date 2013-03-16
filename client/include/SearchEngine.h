@@ -23,10 +23,12 @@
 // Forward declarations
 class QDate;
 class QProcess;
-class QSettings;
 
 namespace vaultaire
 {
+	// Forward declaration(s)
+	class Settings;
+
 	/**
 	 * Model to represent a search of files.
 	 *
@@ -40,10 +42,9 @@ namespace vaultaire
 			/**
 			 * Constructs a new search engine.
 			 *
-			 * @param settings application settings
-			 * @param parent   parent object
+			 * @param parent parent object
 			 */
-			SearchEngine(QSettings* settings, QObject* parent = 0);
+			SearchEngine(QObject* parent = 0);
 
 			/**
 			 * Checks if the engine is currently
@@ -77,7 +78,20 @@ namespace vaultaire
 			void cancel();
 
 		private slots:
+			/**
+			 * Retrieves the search results from standard out if the
+			 * search completed with no errors.
+			 *
+			 * @param exitCode   search process exit code
+			 * @param exitStatus search process exit status
+			 */
 			void finished(int exitCode, QProcess::ExitStatus exitStatus);
+
+			/**
+			 * Handles an error that occured while searching.
+			 *
+			 * @param error search process error type
+			 */
 			void error(QProcess::ProcessError error);
 
 		signals:
@@ -99,7 +113,9 @@ namespace vaultaire
 			void finished(QStringList results);
 
 		private:
-			QSettings* settings;
+			// Settings
+			Settings* settings;
+			// External process
 			QProcess* process;
 	};
 }

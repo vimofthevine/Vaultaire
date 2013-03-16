@@ -15,8 +15,11 @@
  */
 
 #include <QApplication>
+#include <QIcon>
+#include <QSettings>
 
 #include "MainWindow.h"
+#include "SettingKeys.h"
 
 int main(int argc, char* argv[])
 {
@@ -24,7 +27,16 @@ int main(int argc, char* argv[])
 	app.setOrganizationName("vimofthevine");
 	app.setOrganizationDomain("vautlaire.vimofthevine.com");
 	app.setApplicationName("Vaultaire");
-	app.setApplicationVersion("1.0rc1");
+	app.setApplicationVersion("1.1rc1");
+
+	// Do this here before any graphical elements have been created
+	QSettings settings;
+	QString iconTheme = settings.value(vaultaire::ICON_THEME_KEY,
+		vaultaire::DEFAULT_ICON_THEME).toString();
+	if ( ! iconTheme.isEmpty())
+	{
+		QIcon::setThemeName(iconTheme);
+	}
 
 	vaultaire::MainWindow* mainWindow = new vaultaire::MainWindow();
 	mainWindow->show();

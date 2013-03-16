@@ -14,58 +14,58 @@
  * limitations under the License.
  */
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef STATUSBAR_H
+#define STATUSBAR_H
 
-#include <QDialog>
+#include <QStatusBar>
 
 // Forward declaration(s)
-class QListWidget;
-class QStackedWidget;
+class QProgressBar;
 
 namespace vaultaire
 {
-	// Forward declaration(s)
-	class Settings;
-
 	/**
-	 * Application settings and preferences dialog.
+	 * Main window status bar widget.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
-	class SettingsDialog : public QDialog
+	class StatusBar : public QStatusBar
 	{
 		Q_OBJECT
 
 		public:
 			/**
-			 * Constructs a settings dialog.
+			 * Constructs a status bar widget.
+			 *
+			 * @param parent parent widget
 			 */
-			SettingsDialog(QWidget* parent = 0);
+			StatusBar(QWidget* parent = 0);
+
+		public slots:
+			/**
+			 * Sets the progress bar to indeterminate, or
+			 * busy mode.
+			 */
+			void startBusyIndicator();
 
 			/**
-			 * Adds a new settings page to the
-			 * settings dialog.
-			 *
-			 * @param label settings category label
-			 * @param page  settings widget
+			 * Resets the progress bar.
 			 */
-			void add(const QString& label, QWidget* page);
+			void stopBusyIndicator();
+
+			/**
+			 * Sets the progress bar to the given value
+			 * out of the overall maximum value.
+			 *
+			 * @param value current progress value
+			 * @param max   maximum progress value
+			 */
+			void showProgress(int value, int max);
 
 		private:
-			// Application settings
-			Settings* settings;
-
-			// Setting categories list widget
-			QListWidget* selection;
-			// Widget stack
-			QStackedWidget* pages;
-
-			/**
-			 * Create default settings categories.
-			 */
-			void createPages();
+			// Progress bar
+			QProgressBar* progress;
 	};
 }
 
-#endif
+#endif // STATUSBAR_H

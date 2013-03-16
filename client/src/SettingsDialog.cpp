@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
+#include "AppearanceSettings.h"
+#include "GeneralSettings.h"
+#include "LibrarySettings.h"
+#include "OcrSettings.h"
+#include "ScannerSettings.h"
+#include "Settings.h"
 #include "SettingsDialog.h"
 
 namespace vaultaire
 {
-	/** Constructor */
-	SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent)
+	//--------------------------------------------------------------------------
+	SettingsDialog::SettingsDialog(QWidget* parent) :
+		QDialog(parent), settings(new Settings(this))
 	{
 		selection = new QListWidget(this);
 		selection->setMaximumWidth(10);
@@ -48,9 +55,11 @@ namespace vaultaire
 
 		setWindowTitle(tr("Settings"));
 		resize(500, 400);
+
+		createPages();
 	}
 
-	/** Add settings page */
+	//--------------------------------------------------------------------------
 	void SettingsDialog::add(const QString& label, QWidget* page)
 	{
 		selection->addItem(label);
@@ -61,8 +70,19 @@ namespace vaultaire
 		int width = tmp.sizeHint().width() + 25;
 		if (selection->maximumWidth() < width)
 		{
+			selection->setMinimumWidth(width);
 			selection->setMaximumWidth(width);
 		}
+	}
+
+	//--------------------------------------------------------------------------
+	void SettingsDialog::createPages()
+	{
+		add(tr("General"), new GeneralSettings(settings));
+		add(tr("Library"), new LibrarySettings(settings));
+		add(tr("Scanner"), new ScannerSettings(settings));
+		add(tr("OCR"), new OcrSettings(settings));
+		add(tr("Appearance"), new AppearanceSettings);
 	}
 }
 

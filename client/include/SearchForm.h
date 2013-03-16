@@ -26,12 +26,12 @@ class QDateEdit;
 class QFileSystemWatcher;
 class QLineEdit;
 class QPushButton;
-class QSettings;
 
 namespace vaultaire
 {
 	// Forward declarations
 	class SearchEngine;
+	class Settings;
 
 	class SearchForm : public QWidget
 	{
@@ -70,12 +70,16 @@ namespace vaultaire
 			QLineEdit* parameter;
 			QCheckBox* caseSensitivity;
 
+			// Buttons
 			QPushButton* searchButton;
 			QPushButton* resetButton;
 			QPushButton* cancelButton;
 
-			QSettings* settings;
+			// Settings
+			Settings* settings;
+			// Library root watcher
 			QFileSystemWatcher* watcher;
+			// Search engine
 			SearchEngine* engine;
 	};
 }

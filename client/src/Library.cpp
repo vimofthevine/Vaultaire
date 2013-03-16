@@ -19,10 +19,11 @@
 
 #include "Library.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
-	/** Static sanitize */
+	//--------------------------------------------------------------------------
 	QString Library::sanitize(const QString& orig)
 	{
 		QRegExp regex("[\\ <>,.\\/?:;'\"\\[\\{\\]\\}\\|\\\\`~!@#$%^&*\\(\\)+=]");
@@ -36,16 +37,14 @@ namespace vaultaire
 		return sanitized;
 	}
 
-	/** Constructor */
-	Library::Library(QObject* parent) : QObject(parent)
-	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
+	//--------------------------------------------------------------------------
+	Library::Library(QObject* parent) :
+		QObject(parent),
+		settings(new Settings(this)),
+		process(new QProcess(this))
+	{ }
 
-		process = new QProcess(this);
-	}
-
-	/** Add document */
+	//--------------------------------------------------------------------------
 	bool Library::add(const QString& tmpFile,
 		const QDate& date, const QString& collection,
 		const QString& category, const QString& title,
@@ -88,7 +87,7 @@ namespace vaultaire
 		return createMetaFile(metaFile, date, category, title, tags);
 	}
 
-	/** Copy or convert image file into destination location */
+	//--------------------------------------------------------------------------
 	bool Library::copyOrConvert(const QString& src, const QString& dest)
 	{
 		QFile srcFile(src);
@@ -122,7 +121,7 @@ namespace vaultaire
 		}
 	}
 
-	/** Perform OCR */
+	//--------------------------------------------------------------------------
 	bool Library::extractOcr(const QString& src, const QString& dest)
 	{
 		if (settings->value(DO_OCR_KEY, false).toBool())
@@ -142,7 +141,7 @@ namespace vaultaire
 		}
 	}
 
-	/** Create meta file */
+	//--------------------------------------------------------------------------
 	bool Library::createMetaFile(const QString& filename, const QDate& date,
 		const QString& category, const QString& title, const QString& tags)
 	{
@@ -162,7 +161,7 @@ namespace vaultaire
 		return (bytesWritten > 0);
 	}
 
-	/** Execute command */
+	//--------------------------------------------------------------------------
 	bool Library::exec(const QString& command)
 	{
 		if (process->state() == QProcess::NotRunning)

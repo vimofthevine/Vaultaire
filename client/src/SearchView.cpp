@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "ImageViewer.h"
 #include "LibraryEntry.h"
@@ -22,16 +22,16 @@
 #include "SearchForm.h"
 #include "SearchView.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
 	//--------------------------------------------------------------------------
-	SearchView::SearchView(QWidget* parent) : QSplitter(parent)
+	SearchView::SearchView(SearchEngine* engine, QWidget* parent) :
+		QSplitter(parent),
+		settings(new Settings(this)),
+		engine(engine)
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
-
-		engine = new SearchEngine(settings, this);
 		form = new SearchForm(engine, this);
 		resultList = new QListWidget(this);
 		viewer = new ImageViewer(this);

@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "SearchEngine.h"
 #include "SearchForm.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
 	/** Constructor */
-	SearchForm::SearchForm(SearchEngine* engine, QWidget* parent)
-		: QWidget(parent), engine(engine)
+	SearchForm::SearchForm(SearchEngine* engine, QWidget* parent) :
+		QWidget(parent),
+		settings(new Settings(this)),
+		engine(engine)
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
-
 		connect(engine, SIGNAL(started()), this, SLOT(searchStarted()));
 		connect(engine, SIGNAL(failed()), this, SLOT(searchFailed()));
 		connect(engine, SIGNAL(finished(QStringList)),

@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "OcrSettings.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
+	// Field help text(s)
 	static const QString OCR_COMMAND_HELP = "Command to be executed to perform optical character recognition.\n"
 		"\n"
 		"The following values in the command are automatically replaced:\n"
 		"  %in% : image file to be processed\n"
 		"  %out% : output file for OCR text";
 
-	/** Constructor */
-	OcrSettings::OcrSettings(QWidget* parent)
-		: QWidget(parent)
+	//--------------------------------------------------------------------------
+	OcrSettings::OcrSettings(Settings* settings, QWidget* parent) :
+		QWidget(parent), settings(settings)
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
-
-		bool currentDoOcr = settings->value(DO_OCR_KEY, false).toBool();
+		connect(settings, SIGNAL(settingModified(QString)),
+			this, SLOT(reload(QString)));
 
 		// OCR command field
-		QString currentOcrCmd = settings->value(OCR_CMD_KEY,
-			DEFAULT_OCR_CMD).toString();
-		ocrCommand = new QTextEdit(currentOcrCmd, this);
+		ocrCommand = new QTextEdit(this);
 		ocrCommand->setToolTip(OCR_COMMAND_HELP);
 		ocrCommand->setTabChangesFocus(true);
 		ocrCommand->setMaximumHeight(100);
@@ -48,7 +46,6 @@ namespace vaultaire
 
 		// Do-OCR field
 		doOcr = new QCheckBox(this);
-		doOcr->setChecked(currentDoOcr);
 		connect(doOcr, SIGNAL(clicked(bool)),
 			this, SLOT(doOcrChanged(bool)));
 		connect(doOcr, SIGNAL(clicked(bool)),
@@ -60,22 +57,39 @@ namespace vaultaire
 		form->addRow(tr("Perform OCR?"), doOcr);
 		form->addRow(tr("OCR Command"), ocrCommand);
 
-		// Disable field if not writable (i.e., no permission
-		// to modify system-level settings)
-		doOcr->setEnabled(settings->isWritable());
-		ocrCommand->setEnabled(currentDoOcr && settings->isWritable());
+		// Initialize fields
+		reload(SYSTEM_SETTINGS_KEY);
 	}
 
-	/** Store change to do-OCR */
+	//--------------------------------------------------------------------------
 	void OcrSettings::doOcrChanged(bool doOcr)
 	{
 		settings->setValue(DO_OCR_KEY, doOcr);
 	}
 
-	/** Store change to OCR command */
+	//--------------------------------------------------------------------------
 	void OcrSettings::ocrCommandChanged()
 	{
 		settings->setValue(OCR_CMD_KEY, ocrCommand->toPlainText());
+	}
+
+	//--------------------------------------------------------------------------
+	void OcrSettings::reload(const QString& key)
+	{
+		if (key == SYSTEM_SETTINGS_KEY)
+		{
+			bool currentDoOcr = settings->value(DO_OCR_KEY, false).toBool();
+			QString currentOcrCmd = settings->value(OCR_CMD_KEY,
+				DEFAULT_OCR_CMD).toString();
+
+			doOcr->setChecked(currentDoOcr);
+			ocrCommand->setText(currentOcrCmd);
+
+			// Disable field if not writable (i.e., no permission
+			// to modify system-level settings)
+			doOcr->setEnabled(settings->isWritable());
+			ocrCommand->setEnabled(currentDoOcr && settings->isWritable());
+		}
 	}
 }
 

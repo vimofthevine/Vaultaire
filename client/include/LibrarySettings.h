@@ -19,13 +19,16 @@
 
 #include <QWidget>
 
+// Forward declaration(s)
 class QLineEdit;
-class QSettings;
 
 namespace vaultaire
 {
+	// Forward declaration(s)
+	class Settings;
+
 	/**
-	 * Library settings panel.
+	 * Library settings widget.
 	 *
 	 * @author Kyle Treubig <kyle@vimofthevine.com>
 	 */
@@ -35,19 +38,34 @@ namespace vaultaire
 
 		public:
 			/**
-			 * Constructs a new library settings panel.
+			 * Constructs a library settings widget.
 			 *
-			 * @param parent parent widget
+			 * @param settings application settings
+			 * @param parent   parent widget
 			 */
-			LibrarySettings(QWidget* parent = 0);
+			LibrarySettings(Settings* settings, QWidget* parent = 0);
 
 		private slots:
+			/**
+			 * Saves the new library root setting.
+			 *
+			 * @param newLibRoot new library root value
+			 */
 			void libRootChanged(const QString& newLibRoot);
 
+			/**
+			 * Reload setting values if the system-vs-user
+			 * setting has changed.
+			 *
+			 * @param key setting key of the modified setting
+			 */
+			void reload(const QString& key);
+
 		private:
-			/** System-wide settings */
-			QSettings* settings;
-			/** Library root directory field */
+			// Settings
+			Settings* settings;
+
+			// Library root directory field
 			QLineEdit* libRoot;
 	};
 }

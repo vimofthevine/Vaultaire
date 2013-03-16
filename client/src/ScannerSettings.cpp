@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "ScannerSettings.h"
 #include "SettingKeys.h"
+#include "Settings.h"
 
 namespace vaultaire
 {
+	// Field help text(s)
 	static const QString DEVICE_HELP = "Unique identifier of the scanner device";
 	static const QString SCAN_COMMAND_HELP = "Command to be executed to perform a scan operation.\n"
 		"\n"
@@ -34,25 +36,21 @@ namespace vaultaire
 		"  %out% : output (converted) image file name";
 	static const QString CONVERT_SUFFIX_HELP = "File extension of the converted image file";
 
-	/** Constructor */
-	ScannerSettings::ScannerSettings(QWidget* parent)
-		: QWidget(parent)
+	//--------------------------------------------------------------------------
+	ScannerSettings::ScannerSettings(Settings* settings, QWidget* parent) :
+		QWidget(parent), settings(settings)
 	{
-		settings = new QSettings(QSettings::SystemScope,
-			qApp->organizationName(), qApp->applicationName(), this);
+		connect(settings, SIGNAL(settingModified(QString)),
+			this, SLOT(reload(QString)));
 
 		// Scanner device field
-		QString currentDevice = settings->value(SCANNER_DEVICE_KEY,
-			DEFAULT_SCANNER_DEVICE).toString();
-		scannerDevice = new QLineEdit(currentDevice, this);
+		scannerDevice = new QLineEdit(this);
 		scannerDevice->setToolTip(DEVICE_HELP);
 		connect(scannerDevice, SIGNAL(textEdited(QString)),
 			this, SLOT(deviceNameChanged(QString)));
 
 		// Scan command field
-		QString currentCommand = settings->value(SCAN_COMMAND_KEY,
-			DEFAULT_SCAN_COMMAND).toString();
-		scanCommand = new QTextEdit(currentCommand, this);
+		scanCommand = new QTextEdit(this);
 		scanCommand->setToolTip(SCAN_COMMAND_HELP);
 		scanCommand->setTabChangesFocus(true);
 		scanCommand->setMaximumHeight(100);
@@ -60,17 +58,13 @@ namespace vaultaire
 			this, SLOT(scanCommandChanged()));
 
 		// Scanned file suffix field
-		QString currentScanSuffix = settings->value(SCANNED_SUFFIX_KEY,
-			DEFAULT_SCANNED_SUFFIX).toString();
-		scannedSuffix = new QLineEdit(currentScanSuffix, this);
+		scannedSuffix = new QLineEdit(this);
 		scannedSuffix->setToolTip(SCANNED_SUFFIX_HELP);
 		connect(scannedSuffix, SIGNAL(textEdited(QString)),
 			this, SLOT(scanSuffixChanged(QString)));
 
 		// Conversion command field
-		QString currentConvertCmd = settings->value(CONVERT_CMD_KEY,
-			DEFAULT_CONVERT_CMD).toString();
-		convertCommand = new QTextEdit(currentConvertCmd, this);
+		convertCommand = new QTextEdit(this);
 		convertCommand->setToolTip(CONVERT_COMMAND_HELP);
 		convertCommand->setTabChangesFocus(true);
 		convertCommand->setMaximumHeight(100);
@@ -78,17 +72,13 @@ namespace vaultaire
 			this, SLOT(convertCommandChanged()));
 
 		// Converted file suffix field
-		QString currentConvertedSuffix = settings->value(CONVERTED_SUFFIX_KEY,
-			DEFAULT_CONVERTED_SUFFIX).toString();
-		convertedSuffix = new QLineEdit(currentConvertedSuffix, this);
+		convertedSuffix = new QLineEdit(this);
 		convertedSuffix->setToolTip(CONVERT_SUFFIX_HELP);
 		connect(convertedSuffix, SIGNAL(textEdited(QString)),
 			this, SLOT(convertSuffixChanged(QString)));
 
 		// Do-conversion field
-		bool currentDoConvert = settings->value(DO_CONVERT_KEY, false).toBool();
 		doConversion = new QCheckBox(this);
-		doConversion->setChecked(currentDoConvert);
 		connect(doConversion, SIGNAL(clicked(bool)),
 			this, SLOT(doConversionChanged(bool)));
 		connect(doConversion, SIGNAL(clicked(bool)),
@@ -106,51 +96,79 @@ namespace vaultaire
 		form->addRow(tr("Conversion Command"), convertCommand);
 		form->addRow(tr("Converted File Extension"), convertedSuffix);
 
-		// Disable field if not writable (i.e., no permission
-		// to modify system-level settings)
-		scannerDevice->setEnabled(settings->isWritable());
-		scanCommand->setEnabled(settings->isWritable());
-		scannedSuffix->setEnabled(settings->isWritable());
-		doConversion->setEnabled(settings->isWritable());
-		convertCommand->setEnabled(currentDoConvert && settings->isWritable());
-		convertedSuffix->setEnabled(currentDoConvert && settings->isWritable());
+		// Initialize field
+		reload(SYSTEM_SETTINGS_KEY);
 	}
 
-	/** Store change to scanner device */
+	//--------------------------------------------------------------------------
 	void ScannerSettings::deviceNameChanged(const QString& newDevice)
 	{
 		settings->setValue(SCANNER_DEVICE_KEY, newDevice);
 	}
 
-	/** Store change to scan command */
+	//--------------------------------------------------------------------------
 	void ScannerSettings::scanCommandChanged()
 	{
 		settings->setValue(SCAN_COMMAND_KEY, scanCommand->toPlainText());
 	}
 
-	/** Store change to scanned file suffix */
+	//--------------------------------------------------------------------------
 	void ScannerSettings::scanSuffixChanged(const QString& newSuffix)
 	{
 		settings->setValue(SCANNED_SUFFIX_KEY, newSuffix);
 	}
 
-	/** Store change to do-conversion */
+	//--------------------------------------------------------------------------
 	void ScannerSettings::doConversionChanged(bool doConvert)
 	{
 		settings->setValue(DO_CONVERT_KEY, doConvert);
 	}
 
-	/** Store change to conversion command */
+	//--------------------------------------------------------------------------
 	void ScannerSettings::convertCommandChanged()
 	{
 		settings->setValue(CONVERT_CMD_KEY, convertCommand->toPlainText());
 	}
 
-	/** Store change to converted file suffix */
+	//--------------------------------------------------------------------------
 	void ScannerSettings::convertSuffixChanged(const QString& newSuffix)
 	{
 		settings->setValue(CONVERTED_SUFFIX_KEY, newSuffix);
 	}
 
+	//--------------------------------------------------------------------------
+	void ScannerSettings::reload(const QString& key)
+	{
+		if (key == SYSTEM_SETTINGS_KEY)
+		{
+			QString currentDevice = settings->value(SCANNER_DEVICE_KEY,
+				DEFAULT_SCANNER_DEVICE).toString();
+			QString currentCommand = settings->value(SCAN_COMMAND_KEY,
+				DEFAULT_SCAN_COMMAND).toString();
+			QString currentScanSuffix = settings->value(SCANNED_SUFFIX_KEY,
+				DEFAULT_SCANNED_SUFFIX).toString();
+			QString currentConvertCmd = settings->value(CONVERT_CMD_KEY,
+				DEFAULT_CONVERT_CMD).toString();
+			QString currentConvertedSuffix = settings->value(CONVERTED_SUFFIX_KEY,
+				DEFAULT_CONVERTED_SUFFIX).toString();
+			bool currentDoConvert = settings->value(DO_CONVERT_KEY, false).toBool();
+
+			scannerDevice->setText(currentDevice);
+			scanCommand->setText(currentCommand);
+			scannedSuffix->setText(currentScanSuffix);
+			convertCommand->setText(currentConvertCmd);
+			convertedSuffix->setText(currentConvertedSuffix);
+			doConversion->setChecked(currentDoConvert);
+
+			// Disable field if not writable (i.e., no permission
+			// to modify system-level settings)
+			scannerDevice->setEnabled(settings->isWritable());
+			scanCommand->setEnabled(settings->isWritable());
+			scannedSuffix->setEnabled(settings->isWritable());
+			doConversion->setEnabled(settings->isWritable());
+			convertCommand->setEnabled(currentDoConvert && settings->isWritable());
+			convertedSuffix->setEnabled(currentDoConvert && settings->isWritable());
+		}
+	}
 }
 
