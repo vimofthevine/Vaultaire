@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 	app.setOrganizationName("vimofthevine");
 	app.setOrganizationDomain("vautlaire.vimofthevine.com");
 	app.setApplicationName("Vaultaire");
-	app.setApplicationVersion("1.0rc1");
+	app.setApplicationVersion("1.1rc1");
 
 	// Do this here before any graphical elements have been created
 	QSettings settings;
