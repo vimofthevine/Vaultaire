@@ -4,5 +4,6 @@ compiler:
   - clang
 before_install:
   - sudo apt-add-repository -y ppa:canonical-qt5-edgers/qt5-proper
-  - sudo apt-get install -qq qtbase
+  - sudo apt-add-repository -y ppa:ubuntu-sdk-team/ppa
+  - sudo apt-get install -qq ubuntu-sdk
 script: make
